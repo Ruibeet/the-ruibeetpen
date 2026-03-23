@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+
+// 尝试获取所有文章，如果文件夹是空的，它会返回一个空数组
+const allEssays = await getCollection('essays').catch(() => []);
+
+const title = "THE ARCHIVE";
+---
+
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> 
+        body { font-family: 'Noto Serif SC', serif; }
+        .vibe-bg-yellow { background-color: #EEC43E; }
+    </style>
+</head>
+<body class="bg-white text-black antialiased">
+    <nav class="border-b border-black py-8 px-6 md:px-16 flex flex-col md:flex-row justify-between items-center uppercase tracking-widest font-bold">
+        <h1 class="text-4xl font-black tracking-tighter">THE ARCHIVE</h1>
+        <div class="flex gap-8 text-sm mt-6 md:mt-0">
+            <a href="/" class="underline decoration-2">主页</a>
+            <a href="/novel" class="text-[#DF9225] hover:underline">小说</a>
+            <a href="/essays" class="text-[#0A9C49] hover:underline">杂文</a>
+            <a href="/life" class="text-[#A7C9D5] hover:underline">生活</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-16">
+            <section class="md:col-span-8 border-r border-gray-100 pr-0 md:pr-16">
+                {allEssays.length > 0 ? (
+                    allEssays.map(essay => (
+                        <article class="group mb-20 border-b border-gray-50 pb-12">
+                            <p class="text-[#0A9C49] text-xs font-bold tracking-widest mb-4 uppercase">{essay.data.category}</p>
+                            <h2 class="text-5xl leading-tight font-bold mb-8 group-hover:text-[#DF9225] transition-colors">
+                                {essay.data.title}
+                            </h2>
+                            <p class="text-xl leading-relaxed text-gray-800 italic mb-6">
+                                {essay.data.description}
+                            </p>
+                            <div class="text-sm text-gray-400 font-sans uppercase tracking-widest">
+                                {essay.data.date.toLocaleDateString()}
+                            </div>
+                        </article>
+                    ))
+                ) : (
+                    <div class="py-20 text-center border-2 border-dashed border-gray-100">
+                        <p class="text-gray-400 italic">暂时没有发布的文章，快去 src/content/essays 下创建一个 .md 文件吧。</p>
+                    </div>
+                )}
+            </section>
+
+            <aside class="md:col-span-4 flex flex-col gap-12">
+                <div class="vibe-bg-yellow p-10 shadow-[-10px_10px_0px_0px_rgba(0,0,0,1)]">
+                    <h3 class="text-xl font-bold mb-4 uppercase">Subscribe</h3>
+                    <p class="text-sm leading-relaxed mb-6">获取深度文学评论与最新连载。支持与 微信公众号 同步。</p>
+                    <button class="w-full bg-black text-white py-3 font-bold text-sm hover:opacity-80 transition-all">SUBSCRIBE</button>
+                </div>
+                
+                <div class="border-t-4 border-[#DF9225] pt-6">
+                    <h3 class="font-bold text-sm tracking-widest mb-4 uppercase text-[#DF9225]">Patreon</h3>
+                    <p class="text-sm text-gray-600 leading-loose">支持我的长篇小说连载，获取独家创作日记与手稿。</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="mt-32 py-12 border-t border-black px-6 text-center text-[10px] tracking-[0.3em] uppercase opacity-50">
+        © 2026 THE ARCHIVE / Built with Gemini Vibe Coding
+    </footer>
+</body>
+</html>
