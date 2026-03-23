@@ -10,77 +10,120 @@ const title = "Rui & Ruibeet";
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;900&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style shadow:focus>
-        /* 强制背景色和字体，防止缓存 */
-        body { font-family: 'Noto Serif SC', serif; background-color: white !important; margin: 0; }
-        .serif-title { font-family: 'Playfair Display', serif; font-style: italic; }
-        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); border: 2px solid black; }
-        .nav-item { padding: 1.5rem; text-align: center; border-right: 2px solid black; font-weight: 900; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.2em; text-decoration: none; color: white !important; }
+    <style>
+        /* 1. 基础重置 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Serif SC', serif; background-color: white; color: #1a1a1a; overflow-x: hidden; }
+
+        /* 2. 顶部大标题 */
+        header { padding: 120px 20px; text-align: center; }
+        .main-title { 
+            font-family: 'Playfair Display', serif; 
+            font-style: italic; 
+            font-size: clamp(60px, 10vw, 120px); 
+            font-weight: 900; 
+            letter-spacing: -0.05em;
+            line-height: 1;
+        }
+        .subtitle { font-family: sans-serif; font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase; opacity: 0.4; margin-top: 20px; }
+
+        /* 3. 横向色彩目录 */
+        nav { 
+            position: sticky; top: 0; z-index: 100; 
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+            padding: 10px 40px;
+        }
+        .nav-container { 
+            display: flex; width: 100%; border: 2px solid black; 
+            box-shadow: 6px 6px 0px black;
+        }
+        .nav-item { 
+            flex: 1; padding: 20px; text-align: center; 
+            text-decoration: none; color: white !important; 
+            font-weight: 900; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+            border-right: 2px solid black; transition: 0.3s;
+        }
         .nav-item:last-child { border-right: none; }
+        .nav-item:hover { background-color: white !important; color: black !important; }
+
+        /* 4. 文章区域：严格居中 */
+        .content-section { padding: 160px 20px; display: flex; flex-direction: column; align-items: center; }
+        .article-card { max-width: 700px; width: 100%; text-align: center; margin-bottom: 160px; }
+        .category-tag { color: #0A9C49; font-size: 10px; font-weight: 900; letter-spacing: 0.4em; text-transform: uppercase; }
+        .post-title { font-size: clamp(32px, 5vw, 64px); font-weight: 900; margin: 30px 0; line-height: 1.1; cursor: pointer; text-decoration: none; color: black; display: block; }
+        .post-title:hover { font-style: italic; }
+        .divider { width: 60px; height: 1px; background: rgba(0,0,0,0.2); margin: 0 auto 40px; }
+        .post-desc { font-size: 20px; line-height: 1.8; color: #555; font-style: italic; font-weight: 300; }
+        .read-more { 
+            display: inline-block; margin-top: 50px; padding: 15px 40px; 
+            border: 2px solid black; text-decoration: none; color: black;
+            font-size: 10px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; transition: 0.3s;
+        }
+        .read-more:hover { background: black; color: white; }
+
+        /* 5. 订阅区域：明黄色隔断 */
+        .newsletter { background-color: #EEC43E; padding: 100px 20px; border-top: 2px solid black; border-bottom: 2px solid black; text-align: center; }
+        .newsletter-inner { max-width: 600px; margin: 0 auto; }
+        .newsletter h3 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 40px; margin-bottom: 20px; }
+        .newsletter p { margin-bottom: 40px; font-size: 14px; }
+        .input-group { display: flex; gap: 10px; }
+        input { flex: 1; padding: 15px; border: 2px solid black; outline: none; font-weight: bold; }
+        button { background: black; color: white; padding: 15px 30px; border: 2px solid black; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+
+        /* 6. 底部：水蓝色 */
+        footer { background-color: #A7C9D5; padding: 160px 20px; text-align: center; }
+        .footer-logo { 
+            display: inline-block; padding: 30px; background: white; 
+            border: 4px solid black; transform: rotate(3deg); margin-bottom: 40px;
+        }
+        .footer-logo span { font-family: 'Playfair Display', serif; font-style: italic; font-size: 32px; font-weight: 900; }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <header class="py-32 px-6 bg-white text-center">
-        <h1 class="text-7xl md:text-[120px] font-black tracking-tighter serif-title text-black">
-            {title}
-        </h1>
-        <p class="font-sans text-[11px] tracking-[0.5em] uppercase opacity-40 mt-4">Literary Archive & Digital Field</p>
+    <header>
+        <h1 class="main-title">{title}</h1>
+        <p class="subtitle">Literary Archive & Digital Field Observation</p>
     </header>
 
-    <nav class="sticky top-0 z-50 px-4 md:px-10 bg-white/80 backdrop-blur">
-        <div class="nav-grid shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-            <a href="/" class="nav-item" style="background-color: #000000 !important;">Home</a>
-            <a href="/novel" class="nav-item" style="background-color: #DF9225 !important;">Fiction</a>
-            <a href="/essays" class="nav-item" style="background-color: #0A9C49 !important;">Essays</a>
-            <a href="/life" class="nav-item" style="background-color: #A7C9D5 !important;">Life</a>
-            <a href="/field" class="nav-item" style="background-color: #EEC43E !important; color: black !important;">Field</a>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="nav-item" style="background-color: black;">Home</a>
+            <a href="/novel" class="nav-item" style="background-color: #DF9225;">Fiction</a>
+            <a href="/essays" class="nav-item" style="background-color: #0A9C49;">Essays</a>
+            <a href="/life" class="nav-item" style="background-color: #A7C9D5;">Life</a>
+            <a href="/field" class="nav-item" style="background-color: #EEC43E; color: black !important;">Field</a>
         </div>
     </nav>
 
-    <section class="py-40 bg-white">
-        <div class="max-w-[750px] mx-auto px-6">
-            {allEssays.map((essay) => (
-                <article class="mb-48 text-center group">
-                    <span class="text-[#0A9C49] text-[10px] font-black tracking-[0.4em] uppercase">{essay.data.category}</span>
-                    <a href={`/essays/${essay.slug}`} class="block mt-6 mb-10">
-                        <h2 class="text-5xl md:text-6xl font-black leading-tight group-hover:italic transition-all duration-500">
-                            {essay.data.title}
-                        </h2>
-                    </a>
-                    <div class="w-16 h-[1px] bg-black/20 mx-auto mb-10"></div>
-                    <p class="text-xl leading-relaxed text-gray-700 italic font-light px-4">
-                        {essay.data.description}
-                    </p>
-                    <a href={`/essays/${essay.slug}`} class="inline-block mt-12 text-[10px] font-bold uppercase tracking-widest border-2 border-black px-10 py-4 hover:bg-black hover:text-white transition-all">
-                        Open Archive
-                    </a>
-                </article>
-            ))}
-        </div>
-    </section>
+    <div class="content-section">
+        {allEssays.map((essay) => (
+            <article class="article-card">
+                <span class="category-tag">{essay.data.category} / {essay.data.date.toLocaleDateString()}</span>
+                <a href={`/essays/${essay.slug}`} class="post-title">{essay.data.title}</a>
+                <div class="divider"></div>
+                <p class="post-desc">{essay.data.description}</p>
+                <a href={`/essays/${essay.slug}`} class="read-more">Open Manuscript</a>
+            </article>
+        ))}
+    </div>
 
-    <section class="py-32" style="background-color: #EEC43E !important; border-top: 2px solid black; border-bottom: 2px solid black;">
-        <div class="max-w-2xl mx-auto px-6 text-center">
-            <h3 class="text-4xl font-black italic serif-title mb-6">The Newsletter</h3>
-            <p class="text-sm mb-10 font-medium">订阅双语档案：文学空间、电影边界与数字观察。</p>
-            <div class="flex flex-col md:flex-row gap-2">
-                <input type="email" placeholder="EMAIL" class="flex-1 p-4 bg-white border-2 border-black outline-none font-bold" />
-                <button class="bg-black text-white px-10 py-4 font-black uppercase text-xs border-2 border-black hover:bg-white hover:text-black transition-all">
-                    Subscribe
-                </button>
+    <section class="newsletter">
+        <div class="newsletter-inner">
+            <h3>The Newsletter</h3>
+            <p>订阅 Rui & Ruibeet 的双语档案，追踪关于文学物理空间与数字田野的最新观察。</p>
+            <div class="input-group">
+                <input type="email" placeholder="YOUR@EMAIL.COM" />
+                <button>Subscribe</button>
             </div>
         </div>
     </section>
 
-    <footer class="py-40" style="background-color: #A7C9D5 !important;">
-        <div class="text-center">
-            <div class="inline-block border-4 border-black p-8 bg-white rotate-3 mb-10">
-                <span class="text-4xl font-black tracking-tighter italic serif-title">R&R</span>
-            </div>
-            <p class="text-[10px] tracking-[0.5em] uppercase font-black opacity-60">Est. 2026 / Beijing • Leiden</p>
+    <footer>
+        <div class="footer-logo">
+            <span>R&R</span>
         </div>
+        <p style="font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 900; opacity: 0.5;">Est. 2026 / Beijing • Leiden</p>
     </footer>
 
 </body>
