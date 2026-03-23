@@ -13,101 +13,149 @@ const subtitle = "She's got a lot to say before going to hell";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@200;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #A7C9D4;
+            --border-color: #000000;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Noto Serif SC', serif; 
-            background-color: #A7C9D4; 
+            background-color: var(--bg-color); 
             color: #1a1a1a; 
+            line-height: 1.6;
         }
 
-        header { padding: 80px 20px 40px; text-align: center; }
+        /* 1. Header & Title */
+        header { padding: 100px 20px 60px; text-align: center; }
         .main-title { 
             font-family: 'Playfair Display', serif; 
-            font-size: clamp(40px, 8vw, 80px); 
-            font-weight: 400; 
-            letter-spacing: 0.02em;
+            font-size: clamp(50px, 10vw, 100px); 
+            font-weight: 700; 
+            letter-spacing: -0.02em;
+            line-height: 0.9;
         }
         .subtitle { 
             font-family: 'Cinzel', serif; 
-            font-size: 10px; 
-            letter-spacing: 0.4em; 
+            font-size: 11px; 
+            letter-spacing: 0.5em; 
             text-transform: uppercase; 
-            opacity: 0.5; 
-            margin-top: 20px; 
+            opacity: 0.6; 
+            margin-top: 30px; 
         }
 
-        /* 导航栏：双语色彩方块 */
+        /* 2. 中英双语导航栏 (Paris Review 风格的细边框) */
         nav { 
             position: sticky; top: 0; z-index: 100; 
-            padding: 0 40px;
-            background: rgba(167, 201, 212, 0.9);
-            backdrop-filter: blur(8px);
+            padding: 20px 40px;
+            background: rgba(167, 201, 212, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         .nav-container { 
-            display: flex; max-width: 900px; margin: 0 auto; 
-            border: 2.5px solid black; 
-            box-shadow: 8px 8px 0px black;
+            display: flex; max-width: 1200px; margin: 0 auto; 
+            border: 2.5px solid var(--border-color); 
+            box-shadow: 6px 6px 0px var(--border-color);
         }
         .nav-item { 
-            flex: 1; padding: 15px 5px; text-align: center; 
+            flex: 1; padding: 12px 5px; text-align: center; 
             text-decoration: none; color: white !important; 
-            border-right: 2.5px solid black; transition: 0.3s;
-            display: flex; flex-direction: column; gap: 4px;
+            border-right: 2.5px solid var(--border-color); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; gap: 2px;
         }
         .nav-item:last-child { border-right: none; }
-        .nav-item .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 16px; }
-        .nav-item .en { font-family: 'Cinzel', serif; font-size: 9px; opacity: 0.8; }
-        .nav-item:hover { background-color: white !important; }
+        .nav-item .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; }
+        .nav-item .en { font-family: 'Cinzel', serif; font-size: 8px; opacity: 0.9; letter-spacing: 1px; }
+        
+        .nav-item:hover { background-color: white !important; transform: translateY(-2px); }
         .nav-item:hover span { color: black !important; }
 
-        /* 列表区：图文卡片 */
-        .content-grid { max-width: 900px; margin: 60px auto; padding: 0 20px; }
+        /* 3. Paris Review 风格的文章列表 (非对称排版) */
+        .content-grid { max-width: 1100px; margin: 80px auto; padding: 0 40px; }
         
         .essay-card { 
-            background: white; border: 2.5px solid black; 
-            margin-bottom: 50px;
-            box-shadow: 10px 10px 0px black;
-            display: flex; /* 改为横向排布或堆叠 */
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr; /* 仿Paris Review的大图小文比例 */
+            gap: 60px;
+            margin-bottom: 120px;
             text-decoration: none; color: black;
+            align-items: center;
+        }
+        .essay-card:nth-child(even) { grid-template-columns: 1fr 1.2fr; }
+        .essay-card:nth-child(even) .card-image-wrapper { order: 2; }
+
+        .card-image-wrapper {
+            position: relative;
+            border: 2px solid black;
+            padding: 10px;
+            background: white;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.05);
+            transition: 0.4s;
+        }
+        .essay-card:hover .card-image-wrapper { transform: scale(1.02); box-shadow: 20px 20px 0px rgba(0,0,0,0.1); }
+
+        .card-image { width: 100%; height: 450px; object-fit: cover; filter: grayscale(20%); }
+
+        .card-text { padding: 20px 0; }
+        .essay-category { font-family: 'Cinzel'; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: #666; }
+        .essay-title { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 42px; font-weight: 700; margin: 20px 0; 
+            line-height: 1.2;
+        }
+        .essay-desc { font-size: 16px; line-height: 1.8; opacity: 0.8; font-weight: 300; }
+
+        /* 4. Newsletter 订阅区 */
+        .newsletter-box {
+            max-width: 900px; margin: 100px auto;
+            background: #EEC43E; /* 亮黄色吸引注意力 */
+            border: 3px solid black;
+            padding: 80px 40px;
+            text-align: center;
+            box-shadow: 15px 15px 0px black;
+        }
+        .newsletter-box h3 { font-family: 'Playfair Display', serif; font-size: 40px; margin-bottom: 15px; }
+        .newsletter-box p { font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 2px; margin-bottom: 40px; }
+        .email-form { display: flex; justify-content: center; gap: 0; max-width: 500px; margin: 0 auto; }
+        .email-form input { 
+            flex: 1; padding: 15px; border: 2px solid black; border-right: none;
+            font-family: 'Cinzel'; outline: none;
+        }
+        .email-form button { 
+            background: black; color: white; padding: 0 30px; 
+            border: 2px solid black; font-family: 'Cinzel'; cursor: pointer;
             transition: 0.2s;
-            overflow: hidden;
         }
-        .essay-card:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0px black; }
-        
-        /* 卡片图片预览 */
-        .card-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-bottom: 2.5px solid black;
-        }
+        .email-form button:hover { background: white; color: black; }
 
-        .card-text { padding: 40px; }
-        .essay-date { font-family: 'Cinzel'; font-size: 10px; opacity: 0.4; letter-spacing: 0.2em; }
-        .essay-title { font-family: 'ZCOOL XiaoWei', serif; font-size: 32px; margin: 15px 0; }
-        .essay-desc { font-size: 15px; line-height: 1.8; opacity: 0.7; }
-
-        /* 打赏区：红牛双语版 */
-        .support-section { padding: 100px 20px; text-align: center; }
-        .support-card { 
-            display: inline-block; border: 3px solid black; padding: 60px 40px; 
-            background: white; box-shadow: 12px 12px 0px #0A9C49; 
-            max-width: 600px;
+        /* 5. Patron 支持区 (白底绿影) */
+        .patron-section { padding-bottom: 120px; text-align: center; }
+        .patron-card { 
+            display: inline-block; background: white; border: 2.5px solid black;
+            padding: 60px 80px; box-shadow: 12px 12px 0px #0A9C49;
+            max-width: 700px;
         }
-        .support-card h4 { font-family: 'ZCOOL XiaoWei'; font-size: 32px; margin-bottom: 10px; }
-        .support-card .en-sub { font-family: 'Playfair Display', serif; font-style: italic; opacity: 0.5; margin-bottom: 30px; display: block; }
-        .support-text { margin-bottom: 30px; line-height: 1.8; }
-        
-        .patreon-btn { 
-            display: inline-block; background: black; color: white; 
-            text-decoration: none; padding: 20px 40px; font-weight: 700; 
-            letter-spacing: 0.2em; text-transform: uppercase; font-size: 12px;
+        .patron-card h4 { font-family: 'ZCOOL XiaoWei'; font-size: 32px; margin-bottom: 10px; }
+        .patron-card .en-sub { font-family: 'Playfair Display', serif; font-style: italic; opacity: 0.5; display: block; margin-bottom: 30px; }
+        .patron-text { margin-bottom: 40px; font-size: 15px; line-height: 1.8; }
+        .redbull-btn { 
+            display: inline-block; background: black; color: white; padding: 18px 40px;
+            text-decoration: none; font-family: 'Cinzel'; font-weight: 700; font-size: 12px;
+            letter-spacing: 2px; transition: 0.3s;
         }
+        .redbull-btn:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0px rgba(0,0,0,0.2); }
 
-        footer { padding: 80px 0; text-align: center; opacity: 0.3; font-size: 10px; letter-spacing: 0.5em; }
+        footer { padding: 100px 0; text-align: center; opacity: 0.3; font-size: 10px; letter-spacing: 0.5em; }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .essay-card, .essay-card:nth-child(even) { grid-template-columns: 1fr; gap: 30px; }
+            .card-image-wrapper { order: 1 !important; }
+            .card-text { order: 2 !important; }
+            .essay-title { font-size: 28px; }
+        }
     </style>
 </head>
 <body>
@@ -140,11 +188,11 @@ const subtitle = "She's got a lot to say before going to hell";
     <main class="content-grid">
         {latestEssays.map((essay) => (
             <a href={`/essays/${essay.slug}`} class="essay-card">
-                {essay.data.image && (
-                    <img src={essay.data.image} alt={essay.data.title} class="card-image" />
-                )}
+                <div class="card-image-wrapper">
+                    <img src={essay.data.image || '/api/placeholder/800/600'} alt={essay.data.title} class="card-image" />
+                </div>
                 <div class="card-text">
-                    <div class="essay-date">{essay.data.date.toLocaleDateString()} / {essay.data.category}</div>
+                    <div class="essay-category">{essay.data.date.getFullYear()} / {essay.data.category}</div>
                     <h2 class="essay-title">{essay.data.title}</h2>
                     <p class="essay-desc">{essay.data.description}</p>
                 </div>
@@ -152,17 +200,24 @@ const subtitle = "She's got a lot to say before going to hell";
         ))}
     </main>
 
-    <section class="support-section">
-        <div class="support-card">
-            <h4>支持我的田野观察</h4>
-            <span class="en-sub">Support my field observations</span>
-            
-            <div class="support-text">
-                <p>如果你喜欢这些档案，欢迎请我喝杯咖啡（或红牛）。</p>
-                <p style="font-size: 14px; opacity: 0.5;">If you enjoy these archives, feel free to buy me a coffee or a Red Bull.</p>
-            </div>
+    <section class="newsletter-box">
+        <h3>The Newsletter</h3>
+        <p>DIGITAL FIELD OBSERVATIONS & LITERARY SPACE</p>
+        <form class="email-form">
+            <input type="email" placeholder="EMAIL ADDRESS" />
+            <button type="submit">SIGN UP</button>
+        </form>
+    </section>
 
-            <a href="你的链接" class="patreon-btn">Sponsor a Red Bull</a>
+    <section class="patron-section">
+        <div class="patron-card">
+            <h4>支持Rui的写作</h4>
+            <span class="en-sub">Support Rui's Writing</span>
+            <div class="patron-text">
+                <p>如果你喜欢我写的东西，欢迎请我喝罐红牛。</p>
+                <p style="font-size: 13px; opacity: 0.5; margin-top: 5px;">If you enjoy my writings, feel free to buy me a Red Bull.</p>
+            </div>
+            <a href="你的链接" class="redbull-btn">SPONSOR A RED BULL</a>
         </div>
     </section>
 
