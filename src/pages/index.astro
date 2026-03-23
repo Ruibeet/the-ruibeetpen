@@ -45,24 +45,63 @@ const subtitle = "She's got a lot to say before going to hell";
         }
 
         /* 3. 导航栏：色彩方块 */
-        nav { 
-            position: sticky; top: 0; z-index: 100; 
-            padding: 0 40px;
-            background: rgba(167, 201, 212, 0.9);
-            backdrop-filter: blur(8px);
-        }
-        .nav-container { 
-            display: flex; width: 100%; border: 2.5px solid black; 
-            box-shadow: 8px 8px 0px black;
-        }
-        .nav-item { 
-            flex: 1; padding: 22px 10px; text-align: center; 
-            text-decoration: none; color: white !important; 
-            font-weight: 700; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
-            border-right: 2.5px solid black; transition: 0.3s ease;
-        }
-        .nav-item:last-child { border-right: none; }
-        .nav-item:hover { background-color: white !important; color: black !important; }
+nav { 
+    position: sticky; 
+    top: 0; 
+    z-index: 100; 
+    padding: 0 40px;
+    background: rgba(167, 201, 212, 0.9);
+    backdrop-filter: blur(8px);
+}
+
+.nav-container { 
+    display: flex; 
+    width: 100%; 
+    border: 2.5px solid black; 
+    box-shadow: 8px 8px 0px black;
+}
+
+.nav-item { 
+    flex: 1; 
+    padding: 15px 5px; /* 稍微缩小上下内边距以适应双行文字 */
+    text-align: center; 
+    text-decoration: none; 
+    color: white !important; 
+    border-right: 2.5px solid black; 
+    transition: 0.3s ease;
+    display: flex;
+    flex-direction: column; /* 纵向排列中英文 */
+    justify-content: center;
+    gap: 4px; /* 中英文之间的微小间距 */
+}
+
+.nav-item:last-child { border-right: none; }
+
+/* 中文字体：秀气庄重 */
+.nav-item .cn {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+}
+
+/* 英文字体：古典注脚 */
+.nav-item .en {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* 悬停效果：翻转色彩 */
+.nav-item:hover { 
+    background-color: white !important; 
+}
+
+.nav-item:hover .cn, 
+.nav-item:hover .en { 
+    color: black !important; 
+}
 
         /* 4. 最新文章展示：带图 */
         .featured-section { max-width: 900px; margin: 120px auto; padding: 0 20px; }
