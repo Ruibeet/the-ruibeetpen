@@ -1,9 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
-const allEssays = await getCollection('essays');
-// 按时间排序并取前两篇
-const latestTwo = allEssays.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 2);
+const allEssays = await getCollection('essays').catch(() => []);
+// 获取最新的两篇文章用于首页展示
+const latestTwo = allEssays
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 2);
+
 const title = "Rui & Ruibeet";
+const subtitle = "She's got a lot to say before going to hell";
 ---
 
 <html lang="zh-CN">
@@ -11,47 +15,161 @@ const title = "Rui & Ruibeet";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;900&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@200;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #A7C9D4; margin: 0; font-family: 'Noto Serif SC', serif; }
-        .nav-container { display: flex; border: 2.5px solid black; box-shadow: 8px 8px 0px black; margin: 0 40px; position: sticky; top: 20px; z-index: 100; }
-        .nav-item { flex: 1; padding: 20px; text-align: center; text-decoration: none; color: white !important; font-weight: 700; font-size: 12px; border-right: 2.5px solid black; }
+        /* 1. 全局氛围：水蓝色背景 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Noto Serif SC', serif; 
+            background-color: #A7C9D4; 
+            color: #1a1a1a; 
+            overflow-x: hidden; 
+        }
+
+        /* 2. Header：古典秀气 */
+        header { padding: 120px 20px 80px; text-align: center; }
+        .main-title { 
+            font-family: 'Playfair Display', serif; 
+            font-size: clamp(50px, 8vw, 90px); 
+            font-weight: 400; 
+            letter-spacing: 0.05em;
+            line-height: 1.2;
+        }
+        .subtitle { 
+            font-family: 'Cinzel', serif; 
+            font-size: 13px; 
+            letter-spacing: 0.3em; 
+            text-transform: uppercase; 
+            opacity: 0.6; 
+            margin-top: 25px; 
+        }
+
+        /* 3. 导航栏：色彩方块 */
+        nav { 
+            position: sticky; top: 0; z-index: 100; 
+            padding: 0 40px;
+            background: rgba(167, 201, 212, 0.9);
+            backdrop-filter: blur(8px);
+        }
+        .nav-container { 
+            display: flex; width: 100%; border: 2.5px solid black; 
+            box-shadow: 8px 8px 0px black;
+        }
+        .nav-item { 
+            flex: 1; padding: 22px 10px; text-align: center; 
+            text-decoration: none; color: white !important; 
+            font-weight: 700; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+            border-right: 2.5px solid black; transition: 0.3s ease;
+        }
         .nav-item:last-child { border-right: none; }
-        
-        /* 首页大图文章卡片 */
-        .featured-grid { display: grid; grid-template-cols: 1fr; gap: 60px; max-width: 900px; margin: 100px auto; padding: 0 20px; }
-        .feature-card { background: white; border: 2px solid black; overflow: hidden; }
-        .feature-image { width: 100%; height: 450px; object-fit: cover; border-bottom: 2px solid black; }
-        .feature-content { padding: 40px; text-align: center; }
-        .essay-title { font-family: 'ZCOOL XiaoWei', serif; font-size: 42px; margin: 20px 0; color: black; text-decoration: none; display: block; }
-        .essay-title:hover { opacity: 0.7; }
+        .nav-item:hover { background-color: white !important; color: black !important; }
+
+        /* 4. 最新文章展示：带图 */
+        .featured-section { max-width: 900px; margin: 120px auto; padding: 0 20px; }
+        .section-label { 
+            font-family: 'Cinzel'; font-size: 12px; letter-spacing: 0.5em; 
+            text-align: center; margin-bottom: 60px; opacity: 0.5;
+        }
+        .essay-card { 
+            background: white; border: 2.5px solid black; margin-bottom: 80px;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column;
+        }
+        .essay-image { width: 100%; height: 450px; object-fit: cover; border-bottom: 2.5px solid black; }
+        .essay-content { padding: 50px 40px; text-align: center; }
+        .essay-cat { color: #DF9225; font-weight: 900; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; }
+        .essay-title { 
+            font-family: 'ZCOOL XiaoWei', serif; font-size: 42px; margin: 25px 0; 
+            text-decoration: none; color: black; display: block;
+        }
+        .essay-title:hover { opacity: 0.6; }
+        .essay-desc { font-style: italic; color: #555; line-height: 1.8; font-size: 18px; }
+
+        /* 5. 订阅区：明黄色隔断 */
+        .newsletter { 
+            background-color: #EEC43E; padding: 120px 20px; 
+            border-top: 3px solid black; border-bottom: 3px solid black; 
+            text-align: center; margin-top: 100px;
+        }
+        .newsletter-inner { max-width: 550px; margin: 0 auto; }
+        .newsletter h3 { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 25px; }
+        .input-group { display: flex; border: 3px solid black; box-shadow: 8px 8px 0px black; margin-top: 40px; }
+        input { flex: 1; padding: 20px; border: none; outline: none; font-weight: bold; }
+        button { background: black; color: white; padding: 0 35px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; letter-spacing: 0.2em; }
+
+        /* 6. Patreon 区：亮绿色支持 */
+        .support-section { padding: 120px 20px; text-align: center; }
+        .support-card { 
+            display: inline-block; border: 3px solid black; padding: 50px 60px; 
+            background: white; box-shadow: 15px 15px 0px #0A9C49;
+        }
+        .support-card h4 { font-family: 'ZCOOL XiaoWei'; font-size: 32px; margin-bottom: 20px; }
+        .patreon-btn { 
+            display: inline-block; margin-top: 30px; background: black; color: white; 
+            text-decoration: none; padding: 18px 45px; font-weight: 900; 
+            letter-spacing: 0.2em; text-transform: uppercase; transition: 0.3s;
+        }
+        .patreon-btn:hover { transform: scale(1.05); }
+
+        footer { padding: 100px 0; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.5em; }
     </style>
 </head>
 <body>
-    <header style="padding: 100px 0; text-align: center;">
-        <h1 style="font-family: 'Playfair Display'; font-size: 80px; font-weight: 400;">{title}</h1>
-        <p style="letter-spacing: 0.3em; opacity: 0.6;">She's got a lot to say before going to hell</p>
+
+    <header>
+        <h1 class="main-title">{title}</h1>
+        <p class="subtitle">{subtitle}</p>
     </header>
 
-    <nav class="nav-container">
-        <a href="/" class="nav-item" style="background-color: #000000;">Home</a>
-        <a href="/novel" class="nav-item" style="background-color: #0A9C49;">Fiction</a>
-        <a href="/essays" class="nav-item" style="background-color: #DF9225;">Essays</a>
-        <a href="/life" class="nav-item" style="background-color: #EEC43E; color: black !important;">Life</a>
-        <a href="/field" class="nav-item" style="background-color: #F3DE16; color: black !important;">Field</a>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="nav-item" style="background-color: #000000;">Home</a>
+            <a href="/novel" class="nav-item" style="background-color: #0A9C49;">Fiction</a>
+            <a href="/essays" class="nav-item" style="background-color: #DF9225;">Essays</a>
+            <a href="/life" class="nav-item" style="background-color: #EEC43E; color: black !important;">Life</a>
+            <a href="/field" class="nav-item" style="background-color: #F3DE16; color: black !important;">Field</a>
+        </div>
     </nav>
 
-    <main class="featured-grid">
-        {latestTwo.map(essay => (
-            <div class="feature-card">
-                {essay.data.image && <img src={essay.data.image} class="feature-image" />}
-                <div class="feature-content">
-                    <span style="color: #DF9225; font-weight: 900; letter-spacing: 0.2em;">{essay.data.category} / {essay.data.date.toLocaleDateString()}</span>
+    <main class="featured-section">
+        <div class="section-label">Latest Manuscripts</div>
+        
+        {latestTwo.map((essay) => (
+            <article class="essay-card">
+                {essay.data.image && (
+                    <img src={essay.data.image} alt={essay.data.title} class="essay-image" />
+                )}
+                <div class="essay-content">
+                    <span class="essay-cat">{essay.data.category} / {essay.data.date.toLocaleDateString()}</span>
                     <a href={`/essays/${essay.slug}`} class="essay-title">{essay.data.title}</a>
-                    <p style="font-style: italic; color: #666;">{essay.data.description}</p>
+                    <p class="essay-desc">{essay.data.description}</p>
                 </div>
-            </div>
+            </article>
         ))}
     </main>
+
+    <section class="newsletter">
+        <div class="newsletter-inner">
+            <h3>The Newsletter</h3>
+            <p>Subscribe to the archive. Digital field observations and literary space delivered to your inbox.</p>
+            <div class="input-group">
+                <input type="email" placeholder="EMAIL ADDRESS" />
+                <button>Sign Up</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="support-section">
+        <div class="support-card">
+            <h4>支持我的田野观察</h4>
+            <p style="opacity: 0.7;">如果你喜欢这些档案，欢迎在 Patreon 支持我继续书写。</p>
+            <a href="https://www.patreon.com/yourlink" class="patreon-btn">Become a Patron</a>
+        </div>
+    </section>
+
+    <footer>
+        EST. 2026 / RUI & RUIBEET ARCHIVE / BEIJING • LEIDEN
+    </footer>
+
 </body>
 </html>
