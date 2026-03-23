@@ -17,7 +17,7 @@ const { Content } = await entry.render();
     /* 全局背景与基础设置 */
     body { background-color: #DF9225; color: white; margin: 0; font-family: 'Noto Serif SC', serif; }
     
-    /* 文章容器：增加 overflow-x: hidden 确保万一溢出也不会产生横向滚动条 */
+    /* 文章容器 */
     main { 
         max-width: 750px; 
         margin: 0 auto; 
@@ -28,7 +28,7 @@ const { Content } = await entry.render();
         border-left: 2px solid black; 
         border-right: 2px solid black;
         box-sizing: border-box;
-        overflow-wrap: break-word; /* 确保长单词不撑破容器 */
+        overflow-wrap: break-word;
     }
 
     .back-nav { margin-bottom: 40px; font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 0.2em; }
@@ -39,27 +39,43 @@ const { Content } = await entry.render();
     .content { font-size: 18px; line-height: 2.1; text-align: justify; }
     .content :global(p) { margin-bottom: 2.2em; }
 
-    /* --- 核心修复：强制约束图片 --- */
-    /* 1. 针对所有在 .content 内部的图片进行深度强制约束 */
+    /* --- 核心修复：封面图锁定 --- */
+    .main-cover-wrapper {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto 60px auto;
+        box-sizing: border-box;
+    }
+
+    .main-cover-img {
+        display: block;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important; /* 确保比例完整，不被裁剪 */
+        border: 2px solid black;
+        box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        box-sizing: border-box;
+    }
+
+    /* --- 核心修复：正文内部图片强制约束 --- */
     .content :global(img) {
         display: block !important;
-        /* 使用 max-inline-size 代替 max-width 以获得更高优先级 */
         max-width: 100% !important; 
         height: auto !important;
         margin: 3.5rem auto !important;
         border: 1.5px solid black !important;
         padding: 8px !important;
         background: #fcfcfc !important;
-        box-sizing: border-box !important; /* 确保 padding 不会增加图片的实际宽度 */
+        box-sizing: border-box !important;
     }
 
-    /* 2. 针对可能包裹图片的 p 标签进行宽度重置 */
+    /* 针对可能包裹图片的段落进行重置，防止溢出 */
     .content :global(p:has(img)) {
         max-width: 100% !important;
         display: block !important;
     }
 
-    /* 小标题与图注样式保持优雅 */
+    /* 小标题与图注样式 */
     .content :global(h3) {
         font-family: 'ZCOOL XiaoWei', serif;
         font-size: 26px;
@@ -74,7 +90,7 @@ const { Content } = await entry.render();
         text-align: center !important;
         font-size: 14px !important;
         color: #666 !important;
-        margin-top: -2.5rem !important; /* 让图注紧贴图片底部 */
+        margin-top: -2.5rem !important; 
         margin-bottom: 4rem !important;
         font-family: 'Noto Serif SC', serif;
     }
@@ -94,29 +110,18 @@ const { Content } = await entry.render();
 
         <h1>{entry.data.title}</h1>
 
-        
-
         {entry.data.image && (
-
             <div class="main-cover-wrapper">
-
                 <img src={entry.data.image} alt={entry.data.title} class="main-cover-img" />
-
             </div>
-
         )}
 
-        
-
         <div class="content">
-
             <Content />
-
         </div>
 
-
-
         <div id="waline"></div>
+    </main>
 
     <script>
         import { init } from 'https://unpkg.com/@waline/client@v2/dist/waline.mjs';
