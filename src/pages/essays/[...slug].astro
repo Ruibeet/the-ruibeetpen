@@ -14,104 +14,73 @@ const { Content } = await entry.render();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
-        /* 全局背景色 */
-        body { 
-            background-color: #DF9225; 
-            color: white; 
-            margin: 0; 
-            font-family: 'Noto Serif SC', serif; 
-        }
+    /* 全局背景与基础设置 */
+    body { background-color: #DF9225; color: white; margin: 0; font-family: 'Noto Serif SC', serif; }
+    
+    /* 文章容器：增加 overflow-x: hidden 确保万一溢出也不会产生横向滚动条 */
+    main { 
+        max-width: 750px; 
+        margin: 0 auto; 
+        background: white; 
+        color: #1a1a1a; 
+        padding: 80px 40px; 
+        min-height: 100vh; 
+        border-left: 2px solid black; 
+        border-right: 2px solid black;
+        box-sizing: border-box;
+        overflow-wrap: break-word; /* 确保长单词不撑破容器 */
+    }
 
-        /* 文章白底容器 */
-        main { 
-            max-width: 750px; 
-            margin: 0 auto; 
-            background: white; 
-            color: #1a1a1a; 
-            padding: 80px 40px; 
-            min-height: 100vh; 
-            border-left: 2px solid black; 
-            border-right: 2px solid black;
-            box-sizing: border-box;
-        }
+    .back-nav { margin-bottom: 40px; font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 0.2em; }
+    .back-nav a { color: #1a1a1a; text-decoration: none; border-bottom: 1px solid black; }
 
-        /* 返回按钮 */
-        .back-nav {
-            margin-bottom: 40px;
-            font-family: 'Playfair Display', serif;
-            font-size: 12px;
-            letter-spacing: 0.2em;
-        }
-        .back-nav a { color: #1a1a1a; text-decoration: none; border-bottom: 1px solid black; }
+    h1 { font-family: 'ZCOOL XiaoWei', serif; font-size: clamp(32px, 5vw, 56px); text-align: center; margin-bottom: 40px; line-height: 1.2; }
 
-        /* 大标题 */
-        h1 { 
-            font-family: 'ZCOOL XiaoWei', serif; 
-            font-size: clamp(32px, 5vw, 56px); 
-            text-align: center; 
-            margin-bottom: 40px; 
-            line-height: 1.2;
-        }
+    .content { font-size: 18px; line-height: 2.1; text-align: justify; }
+    .content :global(p) { margin-bottom: 2.2em; }
 
-        /* 正文排版 */
-        .content { 
-            font-size: 18px; 
-            line-height: 2.1; 
-            text-align: justify; 
-        }
+    /* --- 核心修复：强制约束图片 --- */
+    /* 1. 针对所有在 .content 内部的图片进行深度强制约束 */
+    .content :global(img) {
+        display: block !important;
+        /* 使用 max-inline-size 代替 max-width 以获得更高优先级 */
+        max-width: 100% !important; 
+        height: auto !important;
+        margin: 3.5rem auto !important;
+        border: 1.5px solid black !important;
+        padding: 8px !important;
+        background: #fcfcfc !important;
+        box-sizing: border-box !important; /* 确保 padding 不会增加图片的实际宽度 */
+    }
 
-        .content :global(p) { margin-bottom: 2.2em; }
+    /* 2. 针对可能包裹图片的 p 标签进行宽度重置 */
+    .content :global(p:has(img)) {
+        max-width: 100% !important;
+        display: block !important;
+    }
 
-        /* 核心修复：文章内图片控制 */
-        .content :global(img) {
-            display: block;
-            max-width: 100%; /* 关键：图片永远不会超出白框 */
-            height: auto;
-            margin: 3.5rem auto 1rem;
-            border: 1px solid rgba(0,0,0,0.1);
-            padding: 8px;
-            background: #fcfcfc;
-        }
+    /* 小标题与图注样式保持优雅 */
+    .content :global(h3) {
+        font-family: 'ZCOOL XiaoWei', serif;
+        font-size: 26px;
+        margin: 4rem 0 1.5rem 0;
+        border-bottom: 1.5px solid black;
+        display: inline-block;
+        padding-bottom: 5px;
+    }
 
-        /* 核心修复：小标题样式 */
-        .content :global(h3) {
-            font-family: 'ZCOOL XiaoWei', serif;
-            font-size: 26px;
-            margin: 4rem 0 1.5rem 0;
-            border-bottom: 1.5px solid black;
-            display: inline-block;
-            padding-bottom: 5px;
-        }
+    .content :global(p > em) {
+        display: block !important;
+        text-align: center !important;
+        font-size: 14px !important;
+        color: #666 !important;
+        margin-top: -2.5rem !important; /* 让图注紧贴图片底部 */
+        margin-bottom: 4rem !important;
+        font-family: 'Noto Serif SC', serif;
+    }
 
-        /* 核心修复：图注样式 (斜体字) */
-        .content :global(p > em) {
-            display: block;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            margin-top: -0.5rem;
-            margin-bottom: 3.5rem;
-            line-height: 1.6;
-            font-family: 'Noto Serif SC', serif;
-        }
-
-        /* 模拟 Paris Review 引用块 */
-        .content :global(blockquote) {
-            border-left: 3px solid #DF9225;
-            padding-left: 30px;
-            margin: 3em 0;
-            font-style: italic;
-            opacity: 0.8;
-        }
-
-        /* 评论区样式调整 */
-        #waline { 
-            margin-top: 100px; 
-            padding-top: 50px; 
-            border-top: 1px solid #eee; 
-            color: #1a1a1a; /* 确保评论区文字在白底上可见 */
-        }
-    </style>
+    #waline { margin-top: 100px; padding-top: 50px; border-top: 1px solid #eee; color: #1a1a1a; }
+</style>
 </head>
 <body>
     <main>
