@@ -1,76 +1,13 @@
 ---
-// 1. 安全导入：如果 collection 还没准备好，回退到空数组
-import { getCollection } from 'astro:content';
-const allReports = await getCollection('field').catch(() => []);
-
-const title = "Field Observations";
-const subtitle = "Digital Ethnography & Cultural Research";
-
-// 2. 模拟数据（作为兜底，确保页面永远有内容）
-const backupReports = [
-    { 
-        id: "REPORT_001",
-        date: "2026.03.10",
-        location: "System Check",
-        title: "路径测试：田野调查存档", 
-        enTitle: "Path Test: Field Archive",
-        summary: "如果你看到这个条目，说明 /field 路径已经激活。你可以开始上传真实的 .md 报告了。",
-        hasImage: false
-    }
-];
-
-// 如果数据库里没东西，就用模拟数据
-const displayReports = allReports.length > 0 ? allReports.map(r => ({...r.data})) : backupReports;
+// 临时清空所有 getCollection 逻辑，只留纯 HTML
 ---
-
 <html lang="zh-CN">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-    <style>
-        :root { --bg-color: #F3DE16; }
-        body { font-family: 'Noto Serif SC', serif; background-color: var(--bg-color); color: black; margin: 0; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
-        .page-header { border-bottom: 4px solid black; padding-bottom: 40px; margin-bottom: 60px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .header-left h1 { font-family: 'Playfair Display'; font-size: clamp(40px, 8vw, 60px); margin: 0; }
-        .reports-list { border-top: 1px solid black; }
-        .report-item { display: grid; grid-template-columns: 200px 1fr 300px; gap: 40px; padding: 40px 0; border-bottom: 1px solid black; text-decoration: none; color: black; }
-        .report-id { font-family: 'Cinzel'; font-weight: 700; background: black; color: var(--bg-color); padding: 2px 8px; font-size: 12px; }
-        .report-title { font-family: 'ZCOOL XiaoWei'; font-size: 28px; margin: 10px 0; }
-        .no-image { border: 1px dashed #999; height: 150px; display: flex; align-items: center; justify-content: center; font-family: 'Cinzel'; font-size: 10px; color: #999; }
-        @media (max-width: 900px) { .report-item { grid-template-columns: 1fr; } }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header class="page-header">
-            <div class="header-left">
-                <h1>{title}</h1>
-                <p style="font-family: 'Cinzel'; letter-spacing: 5px; font-size: 12px;">ARCHIVE</p>
-            </div>
-            <div style="font-family: 'Cinzel'; font-size: 10px; opacity: 0.6; text-align: right;">
-                RUI X. ZHANG / FIELD NOTES
-            </div>
-        </header>
-
-        <main class="reports-list">
-            {displayReports.map((report) => (
-                <div class="report-item">
-                    <div class="report-meta">
-                        <span class="report-id">{report.id}</span>
-                        <div style="margin-top:10px; font-family: 'Cinzel'; font-size: 12px;">{report.date}</div>
-                    </div>
-                    <div>
-                        <div style="font-family: 'Cinzel'; font-size: 10px; letter-spacing: 2px;">LOCATION: {report.location}</div>
-                        <h2 class="report-title">{report.title}</h2>
-                        <p style="font-size: 14px; opacity: 0.8;">{report.summary}</p>
-                    </div>
-                    <div class="no-image">[ FIELD DATA RECORD ]</div>
-                </div>
-            ))}
-        </main>
+<head><meta charset="utf-8" /><title>Field Test</title></head>
+<body style="background: #F3DE16; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
+    <div style="border: 5px solid black; padding: 50px; background: white; box-shadow: 20px 20px 0px black;">
+        <h1>田野页面：路径测试成功</h1>
+        <p>如果看到这个，说明 Vercel 已经识别到了文件。</p>
+        <a href="/">返回首页</a>
     </div>
 </body>
 </html>
