@@ -71,6 +71,35 @@ const subtitle = "She's got a lot to say before going to hell";
         
         .nav-item:hover { background-color: white !important; transform: translateY(-2px); }
         .nav-item:hover span { color: black !important; }
+.nav-item { position: relative; } 
+
+        .dropdown-content {
+            display: none; 
+            position: absolute;
+            top: 100%; 
+            left: -2.5px;
+            width: calc(100% + 2.5px); /* 稍微调整宽度对齐边框 */
+            background-color: #0A9C49; 
+            border: 2.5px solid var(--border-color);
+            border-top: none; /* 让下拉框和上方方块无缝连接 */
+            box-shadow: 6px 6px 0px var(--border-color);
+            z-index: 1000;
+        }
+
+        .nav-item:hover .dropdown-content { display: block; }
+
+        .dropdown-item {
+            padding: 15px 5px;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: white !important;
+            border-bottom: 2px solid black;
+            transition: 0.2s;
+        }
+        .dropdown-item:last-child { border-bottom: none; }
+        .dropdown-item:hover { background-color: white !important; }
+        .dropdown-item:hover span { color: black !important; }
 
         /* 3. Paris Review 风格的文章列表 (非对称排版) */
         .content-grid { max-width: 1100px; margin: 80px auto; padding: 0 40px; }
