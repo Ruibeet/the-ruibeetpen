@@ -1,13 +1,15 @@
 ---
-// 临时清空所有 getCollection 逻辑，只留纯 HTML
+// 完全不使用 getCollection，直接硬编码数据
+const title = "Field Observations";
+const displayReports = [
+    { 
+        id: "REPORT_001",
+        date: "2026.03.10",
+        location: "System Test",
+        title: "路径激活测试", 
+        enTitle: "Path Activation Test",
+        summary: "如果看到这个，说明 /field 页面已经成功绕过数据库报错，正式上线。",
+        hasImage: false
+    }
+];
 ---
-<html lang="zh-CN">
-<head><meta charset="utf-8" /><title>Field Test</title></head>
-<body style="background: #F3DE16; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
-    <div style="border: 5px solid black; padding: 50px; background: white; box-shadow: 20px 20px 0px black;">
-        <h1>田野页面：路径测试成功</h1>
-        <p>如果看到这个，说明 Vercel 已经识别到了文件。</p>
-        <a href="/">返回首页</a>
-    </div>
-</body>
-</html>
