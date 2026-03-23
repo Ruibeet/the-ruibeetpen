@@ -1,116 +1,125 @@
 ---
 import { getCollection } from 'astro:content';
 const allEssays = await getCollection('essays').catch(() => []);
-const title = "THE ARCHIVE";
+const title = "Rui & Ruibeet";
 ---
 
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{title} | Literaria & Digital Culture</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;600;900&display=swap" rel="stylesheet">
+    <title>{title} | Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;600;900&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> 
-        body { 
-            font-family: 'Noto Serif SC', serif; 
-            background-color: #fdfdfb; /* 淡淡的纸张感 */
-        }
-        .text-justified { text-align: justify; }
-        .letter-spacing-tight { letter-spacing: -0.02em; }
-        /* 自定义滚动条，保持精致感 */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #000; }
+    <style>
+        body { font-family: 'Noto Serif SC', serif; background-color: #fcfcfc; }
+        .serif-italic { font-family: 'Playfair Display', serif; font-style: italic; }
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link:hover { color: #0A9C49; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0; background-color: currentColor; transition: width 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .blog-card { transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .blog-card:hover { transform: translateY(-4px); }
     </style>
 </head>
-<body class="text-black antialiased selection:bg-[#F3DE16]">
-    <header class="border-b-[3px] border-black pt-12 pb-6 px-6 md:px-16 mx-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-4 uppercase scale-y-95">
+<body class="text-[#1a1a1a] antialiased">
+
+    <header class="py-24 px-6 border-b border-black/5">
+        <div class="max-w-screen-xl mx-auto text-center">
+            <h1 class="text-7xl md:text-9xl font-black tracking-tighter serif-italic mb-6">
                 {title}
             </h1>
-            <p class="font-sans text-[10px] tracking-[0.4em] uppercase opacity-60">
-                LITERATURE • CINEMA • DIGITAL ANTHROPOLOGY
+            <p class="font-sans text-[11px] tracking-[0.5em] uppercase text-gray-400">
+                A Repository of Words, Cinema, and Digital Fields
             </p>
         </div>
     </header>
 
-    <nav class="sticky top-0 z-50 bg-[#fdfdfb]/80 backdrop-blur-md border-b border-black/10 py-4 px-6 mb-12">
-        <div class="max-w-5xl mx-auto flex justify-center gap-10 text-xs font-bold tracking-widest uppercase">
-            <a href="/" class="hover:text-[#0A9C49] transition-colors underline decoration-2 underline-offset-8">Home</a>
-            <a href="/novel" class="hover:text-[#DF9225] transition-colors">Fiction</a>
-            <a href="/essays" class="hover:text-[#0A9C49] transition-colors">Essays</a>
-            <a href="/life" class="hover:text-[#A7C9D5] transition-colors">Life</a>
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-black py-6">
+        <div class="max-w-screen-xl mx-auto px-6">
+            <ul class="flex flex-wrap justify-center items-center gap-x-12 gap-y-4 text-[13px] font-bold uppercase tracking-widest">
+                <li><a href="/" class="nav-link text-black underline underline-offset-8 decoration-2">Home / 主页</a></li>
+                
+                <li class="group relative cursor-pointer">
+                    <span class="nav-link text-[#DF9225]">Fiction / 小说</span>
+                    <ul class="absolute hidden group-hover:block bg-white border border-black p-4 mt-2 w-40 shadow-xl z-50">
+                        <li><a href="/novel/long" class="block py-2 hover:bg-[#EEC43E]/20 px-2 text-[11px]">Long / 长篇</a></li>
+                        <li><a href="/novel/short" class="block py-2 hover:bg-[#EEC43E]/20 px-2 text-[11px]">Short / 短篇</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="/essays" class="nav-link text-[#0A9C49]">Essays / 杂文</a></li>
+                <li><a href="/life" class="nav-link text-[#A7C9D5]">Life / 生活</a></li>
+                <li><a href="/field" class="nav-link text-[#DF9225]">Field / 田野</a></li>
+            </ul>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <section class="lg:col-span-8">
-                {allEssays.length > 0 ? (
-                    allEssays.map(essay => (
-                        <article class="group relative mb-24 pb-16 border-b border-black/5 last:border-0">
-                            <div class="flex items-center gap-3 mb-6 font-sans text-[10px] tracking-widest uppercase font-bold text-[#0A9C49]">
-                                <span class="w-8 h-[1px] bg-[#0A9C49]"></span>
-                                {essay.data.category}
-                            </div>
-                            
-                            <a href={`/essays/${essay.slug}`} class="block group">
-                                <h2 class="text-4xl md:text-5xl font-bold leading-[1.15] mb-8 group-hover:text-[#DF9225] transition-all duration-500 ease-out letter-spacing-tight">
-                                    {essay.data.title}
-                                </h2>
-                                <p class="text-xl leading-relaxed text-gray-700 mb-8 opacity-90 line-clamp-3 italic">
-                                    {essay.data.description}
-                                </p>
-                            </a>
+    <main class="max-w-screen-xl mx-auto px-6 py-32">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-24">
+            
+            <section class="lg:col-span-8 space-y-32">
+                {allEssays.map((essay, index) => (
+                    <article class="blog-card group">
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class={`h-[2px] w-12 ${index % 2 === 0 ? 'bg-[#0A9C49]' : 'bg-[#A7C9D5]'}`}></span>
+                            <span class="font-sans text-[10px] tracking-[0.3em] uppercase font-black opacity-40">
+                                {essay.data.category} / {essay.data.date.toLocaleDateString()}
+                            </span>
+                        </div>
+                        
+                        <a href={`/essays/${essay.slug}`} class="block">
+                            <h2 class="text-5xl md:text-7xl font-bold leading-[1.05] mb-10 group-hover:italic transition-all duration-500 tracking-tighter">
+                                {essay.data.title}
+                            </h2>
+                            <p class="text-2xl leading-relaxed text-gray-600 mb-10 max-w-2xl font-light">
+                                {essay.data.description}
+                            </p>
+                        </a>
 
-                            <div class="flex justify-between items-center mt-4">
-                                <div class="text-[10px] font-sans uppercase tracking-[0.2em] text-gray-400">
-                                    Published on {essay.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                                </div>
-                                <a href={`/essays/${essay.slug}`} class="text-xs font-bold border-b border-black pb-1 hover:border-[#DF9225] transition-colors">READ MORE →</a>
-                            </div>
-                        </article>
-                    ))
-                ) : (
-                    <div class="h-96 flex flex-col items-center justify-center border border-dashed border-gray-200">
-                        <p class="text-gray-300 italic">No manuscripts found in the archives.</p>
-                    </div>
-                )}
+                        <div class="flex items-center gap-6">
+                            <a href={`/essays/${essay.slug}`} class="text-xs font-black uppercase tracking-widest border-b-2 border-black pb-1 hover:border-[#F3DE16] transition-all">
+                                Read Manuscript →
+                            </a>
+                        </div>
+                    </article>
+                ))}
             </section>
 
-            <aside class="lg:col-span-4 flex flex-col gap-12">
-                <div class="sticky top-28">
-                    <div class="bg-[#EEC43E] p-10 ring-1 ring-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-12">
-                        <h3 class="text-xl font-black mb-4 uppercase tracking-tighter">The Newsletter</h3>
-                        <p class="text-sm leading-relaxed mb-8 font-medium">获取关于数字文化、文学空间与电影研究的深度双语洞察。</p>
-                        <input type="email" placeholder="Your Email" class="w-full p-4 bg-white border-2 border-black text-sm mb-4 outline-none placeholder:text-gray-300" />
-                        <button class="w-full bg-black text-white py-4 font-black text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all border-2 border-black">
-                            Join the List
+            <aside class="lg:col-span-4">
+                <div class="sticky top-40 space-y-20">
+                    
+                    <div class="bg-[#A7C9D5] p-12 relative">
+                        <div class="absolute -top-4 -left-4 w-full h-full border border-black -z-10"></div>
+                        <h3 class="text-2xl font-black uppercase tracking-tighter mb-4 italic">Newsletter</h3>
+                        <p class="text-sm leading-relaxed mb-8 opacity-80 font-medium">深度文化观察，直达你的邮箱。</p>
+                        <input type="text" placeholder="Email Address" class="w-full bg-white border border-black p-4 text-xs mb-4 outline-none placeholder:text-gray-300" />
+                        <button class="w-full bg-black text-white py-4 font-black text-[10px] uppercase tracking-[0.3em] hover:bg-[#0A9C49] transition-all">
+                            Join Now
                         </button>
                     </div>
 
-                    <div class="border-t-[3px] border-black pt-8">
-                        <h3 class="text-xs font-black tracking-[0.3em] uppercase mb-6">Support & Connect</h3>
-                        <ul class="flex flex-col gap-4 text-sm font-bold uppercase tracking-widest">
-                            <li><a href="#" class="hover:text-[#DF9225] transition-colors border-b border-transparent hover:border-[#DF9225]">Patreon</a></li>
-                            <li><a href="#" class="hover:text-[#0A9C49] transition-colors border-b border-transparent hover:border-[#0A9C49]">Substack</a></li>
-                            <li><a href="#" class="hover:text-[#A7C9D5] transition-colors border-b border-transparent hover:border-[#A7C9D5]">Instagram</a></li>
-                        </ul>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="h-24 bg-[#0A9C49]"></div>
+                        <div class="h-24 bg-[#EEC43E]"></div>
+                        <div class="h-24 bg-[#DF9225]"></div>
+                        <div class="h-24 bg-[#F3DE16]"></div>
+                    </div>
+
+                    <div class="pt-12 border-t border-black">
+                        <h4 class="text-xs font-black uppercase tracking-[0.4em] mb-6">Archive Info</h4>
+                        <p class="text-[13px] leading-loose text-gray-500 italic">
+                            这是 Ruibeet 的个人文字档案馆，记录文学、电影与数字田野。所有文字皆为原创。
+                        </p>
                     </div>
                 </div>
             </aside>
         </div>
     </main>
 
-    <footer class="py-20 bg-black text-white px-6 text-center">
-        <div class="max-w-xl mx-auto">
-            <h4 class="text-2xl font-black mb-6 tracking-tighter uppercase">{title}</h4>
-            <p class="text-[10px] tracking-[0.5em] uppercase opacity-40 leading-loose">
-                Established 2026<br/>
-                Curating the intersection of word and void.
-            </p>
-        </div>
+    <footer class="py-40 bg-white border-t border-black flex flex-col items-center">
+        <div class="text-[100px] font-black opacity-[0.03] leading-none mb-10">RUIBEET</div>
+        <p class="text-[10px] tracking-[0.5em] uppercase opacity-40">EST. 2026 / Beijing & London & Leiden</p>
     </footer>
 </body>
 </html>
