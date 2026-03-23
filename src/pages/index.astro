@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 const allEssays = await getCollection('essays').catch(() => []);
 const title = "Rui & Ruibeet";
+const subtitle = "She's got a lot to say before going to hell";
 ---
 
 <html lang="zh-CN">
@@ -9,90 +10,119 @@ const title = "Rui & Ruibeet";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;900&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&family=Noto+Serif+SC:wght@200;700&display=swap" rel="stylesheet">
     <style>
-        /* 1. 基础重置 */
+        /* 1. 全局色彩与背景 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Noto Serif SC', serif; background-color: white; color: #1a1a1a; overflow-x: hidden; }
+        body { 
+            font-family: 'Noto Serif SC', serif; 
+            background-color: #A7C9D4; /* 你指定的水蓝色背景 */
+            color: #1a1a1a; 
+            overflow-x: hidden; 
+        }
 
-        /* 2. 顶部大标题 */
-        header { padding: 120px 20px; text-align: center; }
+        /* 2. Title：古典秀气 */
+        header { padding: 100px 20px 80px; text-align: center; }
         .main-title { 
             font-family: 'Playfair Display', serif; 
-            font-style: italic; 
-            font-size: clamp(60px, 10vw, 120px); 
-            font-weight: 900; 
-            letter-spacing: -0.05em;
-            line-height: 1;
+            font-size: clamp(50px, 8vw, 90px); 
+            font-weight: 400; /* 去掉粗体和斜体，回归古典秀气 */
+            letter-spacing: 0.05em;
+            line-height: 1.2;
+            text-transform: none;
         }
-        .subtitle { font-family: sans-serif; font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase; opacity: 0.4; margin-top: 20px; }
+        .subtitle { 
+            font-family: 'Cinzel', serif; 
+            font-size: 13px; 
+            letter-spacing: 0.3em; 
+            text-transform: uppercase; 
+            opacity: 0.6; 
+            margin-top: 25px; 
+        }
 
-        /* 3. 横向色彩目录 */
+        /* 3. 目录：色彩方块横排 */
         nav { 
             position: sticky; top: 0; z-index: 100; 
-            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
-            padding: 10px 40px;
+            padding: 0 40px;
+            background: rgba(167, 201, 212, 0.9); /* 与背景色统一的半透明 */
+            backdrop-filter: blur(5px);
         }
         .nav-container { 
-            display: flex; width: 100%; border: 2px solid black; 
-            box-shadow: 6px 6px 0px black;
+            display: flex; width: 100%; border: 2.5px solid black; 
+            box-shadow: 8px 8px 0px black;
         }
         .nav-item { 
-            flex: 1; padding: 20px; text-align: center; 
+            flex: 1; padding: 22px 10px; text-align: center; 
             text-decoration: none; color: white !important; 
-            font-weight: 900; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
-            border-right: 2px solid black; transition: 0.3s;
+            font-weight: 700; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+            border-right: 2.5px solid black; transition: all 0.4s ease;
         }
         .nav-item:last-child { border-right: none; }
-        .nav-item:hover { background-color: white !important; color: black !important; }
+        /* 鼠标悬停：反色效果 */
+        .nav-item:hover { background-color: white !important; color: black !important; transform: translateY(-2px); }
 
-        /* 4. 文章区域：严格居中 */
-        .content-section { padding: 160px 20px; display: flex; flex-direction: column; align-items: center; }
-        .article-card { max-width: 700px; width: 100%; text-align: center; margin-bottom: 160px; }
-        .category-tag { color: #0A9C49; font-size: 10px; font-weight: 900; letter-spacing: 0.4em; text-transform: uppercase; }
-        .post-title { font-size: clamp(32px, 5vw, 64px); font-weight: 900; margin: 30px 0; line-height: 1.1; cursor: pointer; text-decoration: none; color: black; display: block; }
-        .post-title:hover { font-style: italic; }
-        .divider { width: 60px; height: 1px; background: rgba(0,0,0,0.2); margin: 0 auto 40px; }
-        .post-desc { font-size: 20px; line-height: 1.8; color: #555; font-style: italic; font-weight: 300; }
-        .read-more { 
-            display: inline-block; margin-top: 50px; padding: 15px 40px; 
-            border: 2px solid black; text-decoration: none; color: black;
-            font-size: 10px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; transition: 0.3s;
+        /* 4. 内容排版 */
+        .content-section { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; }
+        .article-card { max-width: 720px; width: 100%; text-align: center; margin-bottom: 140px; }
+        .category-tag { color: #0A9C49; font-size: 10px; font-weight: 700; letter-spacing: 0.5em; text-transform: uppercase; opacity: 0.8; }
+        
+        .post-title { 
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 5vw, 56px); 
+            font-weight: 400; 
+            margin: 35px 0; 
+            line-height: 1.2; 
+            text-decoration: none; 
+            color: black; 
+            display: block; 
+            transition: 0.3s;
         }
-        .read-more:hover { background: black; color: white; }
+        .post-title:hover { opacity: 0.6; }
+
+        .divider { width: 40px; height: 1.5px; background: black; margin: 0 auto 40px; opacity: 0.3; }
+        .post-desc { font-size: 19px; line-height: 1.9; color: #2a2a2a; font-style: italic; font-weight: 300; padding: 0 20px; }
+        
+        .read-more { 
+            display: inline-block; margin-top: 50px; padding: 14px 45px; 
+            border: 2px solid black; text-decoration: none; color: black;
+            font-size: 10px; font-weight: 900; letter-spacing: 0.3em; text-transform: uppercase; 
+            background: transparent; transition: 0.3s;
+        }
+        .read-more:hover { background: black; color: #A7C9D4; }
 
         /* 5. 订阅区域：明黄色隔断 */
-        .newsletter { background-color: #EEC43E; padding: 100px 20px; border-top: 2px solid black; border-bottom: 2px solid black; text-align: center; }
-        .newsletter-inner { max-width: 600px; margin: 0 auto; }
-        .newsletter h3 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 40px; margin-bottom: 20px; }
-        .newsletter p { margin-bottom: 40px; font-size: 14px; }
-        .input-group { display: flex; gap: 10px; }
-        input { flex: 1; padding: 15px; border: 2px solid black; outline: none; font-weight: bold; }
-        button { background: black; color: white; padding: 15px 30px; border: 2px solid black; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+        .newsletter { background-color: #EEC43E; padding: 110px 20px; border-top: 2.5px solid black; border-bottom: 2.5px solid black; text-align: center; }
+        .newsletter-inner { max-width: 550px; margin: 0 auto; }
+        .newsletter h3 { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 25px; font-weight: 400; }
+        .newsletter p { margin-bottom: 45px; font-size: 14px; letter-spacing: 0.05em; line-height: 1.8; }
+        .input-group { display: flex; gap: 0; border: 2.5px solid black; }
+        input { flex: 1; padding: 18px; border: none; outline: none; font-weight: bold; background: white; }
+        button { background: black; color: white; padding: 18px 35px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; letter-spacing: 0.2em; }
+        button:hover { background: #1a1a1a; }
 
-        /* 6. 底部：水蓝色 */
-        footer { background-color: #A7C9D5; padding: 160px 20px; text-align: center; }
+        /* 6. Footer */
+        footer { padding: 120px 20px; text-align: center; }
         .footer-logo { 
-            display: inline-block; padding: 30px; background: white; 
-            border: 4px solid black; transform: rotate(3deg); margin-bottom: 40px;
+            display: inline-block; padding: 25px 40px; background: white; 
+            border: 3px solid black; transform: rotate(-2deg); margin-bottom: 40px;
         }
-        .footer-logo span { font-family: 'Playfair Display', serif; font-style: italic; font-size: 32px; font-weight: 900; }
+        .footer-logo span { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 400; }
     </style>
 </head>
 <body>
 
     <header>
         <h1 class="main-title">{title}</h1>
-        <p class="subtitle">Literary Archive & Digital Field Observation</p>
+        <p class="subtitle">{subtitle}</p>
     </header>
 
     <nav>
         <div class="nav-container">
-            <a href="/" class="nav-item" style="background-color: black;">Home</a>
-            <a href="/novel" class="nav-item" style="background-color: #DF9225;">Fiction</a>
-            <a href="/essays" class="nav-item" style="background-color: #0A9C49;">Essays</a>
-            <a href="/life" class="nav-item" style="background-color: #A7C9D5;">Life</a>
-            <a href="/field" class="nav-item" style="background-color: #EEC43E; color: black !important;">Field</a>
+            <a href="/" class="nav-item" style="background-color: #000000;">Home</a>
+            <a href="/novel" class="nav-item" style="background-color: #0A9C49;">Fiction</a>
+            <a href="/essays" class="nav-item" style="background-color: #DF9225;">Essays</a>
+            <a href="/life" class="nav-item" style="background-color: #EEC43E; color: black !important;">Life</a>
+            <a href="/field" class="nav-item" style="background-color: #F3DE16; color: black !important;">Field</a>
         </div>
     </nav>
 
@@ -111,19 +141,19 @@ const title = "Rui & Ruibeet";
     <section class="newsletter">
         <div class="newsletter-inner">
             <h3>The Newsletter</h3>
-            <p>订阅 Rui & Ruibeet 的双语档案，追踪关于文学物理空间与数字田野的最新观察。</p>
+            <p>Subscribe to the archive. Musings on cinematic space, digital anthropology, and the things she's got to say.</p>
             <div class="input-group">
-                <input type="email" placeholder="YOUR@EMAIL.COM" />
-                <button>Subscribe</button>
+                <input type="email" placeholder="EMAIL ADDRESS" />
+                <button>Sign Up</button>
             </div>
         </div>
     </section>
 
     <footer>
         <div class="footer-logo">
-            <span>R&R</span>
+            <span>R&R Archive</span>
         </div>
-        <p style="font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; font-weight: 900; opacity: 0.5;">Est. 2026 / Beijing • Leiden</p>
+        <p style="font-size: 10px; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 700; opacity: 0.4;">Est. 2026 / Beijing • Leiden • Archive</p>
     </footer>
 
 </body>
