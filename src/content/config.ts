@@ -1,14 +1,33 @@
 import { defineCollection, z } from 'astro:content';
 
-const essays = defineCollection({
+// 定义“田野”集合的结构
+const field = defineCollection({
   type: 'content',
   schema: z.object({
+    id: z.string(),
+    date: z.coerce.date(), // 强制转换为日期格式
+    location: z.string(),
     title: z.string(),
-    date: z.date(),
-    description: z.string(),
-    category: z.string(),
-    image: z.string().optional(), // 新增图片字段
+    enTitle: z.string(),
+    summary: z.string(),
+    hasImage: z.boolean(),
+    image: z.string().optional(),
   }),
 });
 
-export const collections = { essays };
+// 定义“生活”集合的结构
+const life = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string().optional(),
+    date: z.coerce.date(),
+    image: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  }),
+});
+
+// 导出所有集合
+export const collections = {
+  'field': field,
+  'life': life,
+};
