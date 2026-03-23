@@ -1,8 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-const allEssays = await getCollection('essays').catch(() => []);
+const allEssays = await getCollection('essays');
+// 按时间排序并取前两篇
+const latestTwo = allEssays.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 2);
 const title = "Rui & Ruibeet";
-const subtitle = "She's got a lot to say before going to hell";
 ---
 
 <html lang="zh-CN">
@@ -10,151 +11,47 @@ const subtitle = "She's got a lot to say before going to hell";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&family=Noto+Serif+SC:wght@200;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;900&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
-        /* 1. 全局色彩与背景 */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Noto Serif SC', serif; 
-            background-color: #A7C9D4; /* 你指定的水蓝色背景 */
-            color: #1a1a1a; 
-            overflow-x: hidden; 
-        }
-
-        /* 2. Title：古典秀气 */
-        header { padding: 100px 20px 80px; text-align: center; }
-        .main-title { 
-            font-family: 'Playfair Display', serif; 
-            font-size: clamp(50px, 8vw, 90px); 
-            font-weight: 400; /* 去掉粗体和斜体，回归古典秀气 */
-            letter-spacing: 0.05em;
-            line-height: 1.2;
-            text-transform: none;
-        }
-        .subtitle { 
-            font-family: 'Cinzel', serif; 
-            font-size: 13px; 
-            letter-spacing: 0.3em; 
-            text-transform: uppercase; 
-            opacity: 0.6; 
-            margin-top: 25px; 
-        }
-
-        /* 3. 目录：色彩方块横排 */
-        nav { 
-            position: sticky; top: 0; z-index: 100; 
-            padding: 0 40px;
-            background: rgba(167, 201, 212, 0.9); /* 与背景色统一的半透明 */
-            backdrop-filter: blur(5px);
-        }
-        .nav-container { 
-            display: flex; width: 100%; border: 2.5px solid black; 
-            box-shadow: 8px 8px 0px black;
-        }
-        .nav-item { 
-            flex: 1; padding: 22px 10px; text-align: center; 
-            text-decoration: none; color: white !important; 
-            font-weight: 700; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
-            border-right: 2.5px solid black; transition: all 0.4s ease;
-        }
+        body { background-color: #A7C9D4; margin: 0; font-family: 'Noto Serif SC', serif; }
+        .nav-container { display: flex; border: 2.5px solid black; box-shadow: 8px 8px 0px black; margin: 0 40px; position: sticky; top: 20px; z-index: 100; }
+        .nav-item { flex: 1; padding: 20px; text-align: center; text-decoration: none; color: white !important; font-weight: 700; font-size: 12px; border-right: 2.5px solid black; }
         .nav-item:last-child { border-right: none; }
-        /* 鼠标悬停：反色效果 */
-        .nav-item:hover { background-color: white !important; color: black !important; transform: translateY(-2px); }
-
-        /* 4. 内容排版 */
-        .content-section { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; }
-        .article-card { max-width: 720px; width: 100%; text-align: center; margin-bottom: 140px; }
-        .category-tag { color: #0A9C49; font-size: 10px; font-weight: 700; letter-spacing: 0.5em; text-transform: uppercase; opacity: 0.8; }
         
-        .post-title { 
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(32px, 5vw, 56px); 
-            font-weight: 400; 
-            margin: 35px 0; 
-            line-height: 1.2; 
-            text-decoration: none; 
-            color: black; 
-            display: block; 
-            transition: 0.3s;
-        }
-        .post-title:hover { opacity: 0.6; }
-
-        .divider { width: 40px; height: 1.5px; background: black; margin: 0 auto 40px; opacity: 0.3; }
-        .post-desc { font-size: 19px; line-height: 1.9; color: #2a2a2a; font-style: italic; font-weight: 300; padding: 0 20px; }
-        
-        .read-more { 
-            display: inline-block; margin-top: 50px; padding: 14px 45px; 
-            border: 2px solid black; text-decoration: none; color: black;
-            font-size: 10px; font-weight: 900; letter-spacing: 0.3em; text-transform: uppercase; 
-            background: transparent; transition: 0.3s;
-        }
-        .read-more:hover { background: black; color: #A7C9D4; }
-
-        /* 5. 订阅区域：明黄色隔断 */
-        .newsletter { background-color: #EEC43E; padding: 110px 20px; border-top: 2.5px solid black; border-bottom: 2.5px solid black; text-align: center; }
-        .newsletter-inner { max-width: 550px; margin: 0 auto; }
-        .newsletter h3 { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 25px; font-weight: 400; }
-        .newsletter p { margin-bottom: 45px; font-size: 14px; letter-spacing: 0.05em; line-height: 1.8; }
-        .input-group { display: flex; gap: 0; border: 2.5px solid black; }
-        input { flex: 1; padding: 18px; border: none; outline: none; font-weight: bold; background: white; }
-        button { background: black; color: white; padding: 18px 35px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; letter-spacing: 0.2em; }
-        button:hover { background: #1a1a1a; }
-
-        /* 6. Footer */
-        footer { padding: 120px 20px; text-align: center; }
-        .footer-logo { 
-            display: inline-block; padding: 25px 40px; background: white; 
-            border: 3px solid black; transform: rotate(-2deg); margin-bottom: 40px;
-        }
-        .footer-logo span { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 400; }
+        /* 首页大图文章卡片 */
+        .featured-grid { display: grid; grid-template-cols: 1fr; gap: 60px; max-width: 900px; margin: 100px auto; padding: 0 20px; }
+        .feature-card { background: white; border: 2px solid black; overflow: hidden; }
+        .feature-image { width: 100%; height: 450px; object-fit: cover; border-bottom: 2px solid black; }
+        .feature-content { padding: 40px; text-align: center; }
+        .essay-title { font-family: 'ZCOOL XiaoWei', serif; font-size: 42px; margin: 20px 0; color: black; text-decoration: none; display: block; }
+        .essay-title:hover { opacity: 0.7; }
     </style>
 </head>
 <body>
-
-    <header>
-        <h1 class="main-title">{title}</h1>
-        <p class="subtitle">{subtitle}</p>
+    <header style="padding: 100px 0; text-align: center;">
+        <h1 style="font-family: 'Playfair Display'; font-size: 80px; font-weight: 400;">{title}</h1>
+        <p style="letter-spacing: 0.3em; opacity: 0.6;">She's got a lot to say before going to hell</p>
     </header>
 
-    <nav>
-        <div class="nav-container">
-            <a href="/" class="nav-item" style="background-color: #000000;">Home</a>
-            <a href="/novel" class="nav-item" style="background-color: #0A9C49;">Fiction</a>
-            <a href="/essays" class="nav-item" style="background-color: #DF9225;">Essays</a>
-            <a href="/life" class="nav-item" style="background-color: #EEC43E; color: black !important;">Life</a>
-            <a href="/field" class="nav-item" style="background-color: #F3DE16; color: black !important;">Field</a>
-        </div>
+    <nav class="nav-container">
+        <a href="/" class="nav-item" style="background-color: #000000;">Home</a>
+        <a href="/novel" class="nav-item" style="background-color: #0A9C49;">Fiction</a>
+        <a href="/essays" class="nav-item" style="background-color: #DF9225;">Essays</a>
+        <a href="/life" class="nav-item" style="background-color: #EEC43E; color: black !important;">Life</a>
+        <a href="/field" class="nav-item" style="background-color: #F3DE16; color: black !important;">Field</a>
     </nav>
 
-    <div class="content-section">
-        {allEssays.map((essay) => (
-            <article class="article-card">
-                <span class="category-tag">{essay.data.category} / {essay.data.date.toLocaleDateString()}</span>
-                <a href={`/essays/${essay.slug}`} class="post-title">{essay.data.title}</a>
-                <div class="divider"></div>
-                <p class="post-desc">{essay.data.description}</p>
-                <a href={`/essays/${essay.slug}`} class="read-more">Open Manuscript</a>
-            </article>
-        ))}
-    </div>
-
-    <section class="newsletter">
-        <div class="newsletter-inner">
-            <h3>The Newsletter</h3>
-            <p>Subscribe to the archive. Musings on cinematic space, digital anthropology, and the things she's got to say.</p>
-            <div class="input-group">
-                <input type="email" placeholder="EMAIL ADDRESS" />
-                <button>Sign Up</button>
+    <main class="featured-grid">
+        {latestTwo.map(essay => (
+            <div class="feature-card">
+                {essay.data.image && <img src={essay.data.image} class="feature-image" />}
+                <div class="feature-content">
+                    <span style="color: #DF9225; font-weight: 900; letter-spacing: 0.2em;">{essay.data.category} / {essay.data.date.toLocaleDateString()}</span>
+                    <a href={`/essays/${essay.slug}`} class="essay-title">{essay.data.title}</a>
+                    <p style="font-style: italic; color: #666;">{essay.data.description}</p>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-logo">
-            <span>R&R Archive</span>
-        </div>
-        <p style="font-size: 10px; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 700; opacity: 0.4;">Est. 2026 / Beijing • Leiden • Archive</p>
-    </footer>
-
+        ))}
+    </main>
 </body>
 </html>
