@@ -1,12 +1,8 @@
 import { defineConfig } from 'astro/config';
-import react from "@astrojs/react";
-import tailwind from "@astrojs/tailwind";
 
 export default defineConfig({
   output: 'static',
   build: { format: 'directory' },
-  integrations: [
-    react(),
-    tailwind()
-  ],
+  // 暂时不加载 react 和 tailwind 插件，因为你的工具箱里还没装好它们
+  integrations: [] 
 });
