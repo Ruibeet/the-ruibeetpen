@@ -1,15 +1,15 @@
 import { defineCollection, z } from 'astro:content';
 
-// 1. 定义“杂文 (Essays)”集合
+// 1. 定义“杂文 (Essays)”集合 - 重点修复对象
 const essays = defineCollection({
   type: 'content',
-  // ✨ 必须传入 { image } 参数
+  // ✨ 使用 ({ image }) 函数式 Schema，这是处理本地图片的关键
   schema: ({ image }) => z.object({
     title: z.string(),
     date: z.any(),
     description: z.string(),
     category: z.string(),
-    // ✨ 使用 image() 助手，Astro 会自动处理 ./f1-images/max.jpg 这种路径
+    // ✨ 这里的 image() 会把你的 "./f1-images/max.jpg" 转换成 Astro 优化的资源
     image: image(), 
   }),
 });
@@ -24,7 +24,7 @@ const field = defineCollection({
     date: z.any(),    
     location: z.string(),
     summary: z.string(),
-    image: image().optional(), // 这里也统一改为 image()
+    image: image().optional(),
   }),
 });
 
@@ -39,7 +39,7 @@ const life = defineCollection({
   }),
 });
 
-// 4. 统一导出
+// 4. 统一导出：确保包含 essays, field, life
 export const collections = { 
   'essays': essays,
   'field': field,
