@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+const posts = await getCollection('field', ({ data }) => data.category === '100-people');
+---
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>100 People | 田野</title>
+    <style>
+        body { background-color: #F3DE16; font-family: 'Noto Serif SC', serif; margin: 0; }
+        .header { text-align: center; padding: 80px 20px; border-bottom: 2px solid black; }
+        .header h1 { font-family: 'Playfair Display'; font-size: 50px; margin: 0; }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 40px; 
+            padding: 60px 40px; 
+            max-width: 1200px; margin: 0 auto;
+        }
+        .card { 
+            background: white; border: 2px solid black; 
+            box-shadow: 10px 10px 0px black; padding: 20px;
+            transition: 0.3s; text-decoration: none; color: black;
+        }
+        .card:hover { transform: translate(-5px, -5px); box-shadow: 15px 15px 0px black; }
+        .card img { width: 100%; height: 250px; object-fit: cover; border: 1px solid #eee; margin-bottom: 15px; }
+        .card h2 { font-family: 'ZCOOL XiaoWei'; font-size: 22px; margin: 10px 0; }
+        .card p { font-size: 14px; opacity: 0.8; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>100 PEOPLE</h1>
+        <p style="font-family: 'Cinzel'; letter-spacing: 4px;">人物特写 / PROFILE</p>
+    </div>
+    <div class="grid">
+        {posts.map(post => (
+            <a href={`/field/${post.slug}`} class="card">
+                <img src={post.data.image || 'https://via.placeholder.com/400x300'} />
+                <h2>{post.data.title}</h2>
+                <p>{post.data.summary}</p>
+            </a>
+        ))}
+    </div>
+</body>
+</html>
