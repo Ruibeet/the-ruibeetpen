@@ -1,47 +1,175 @@
 ---
 import { getCollection } from 'astro:content';
+
+// 核心逻辑：只获取 category 为 "100-people" 的文章
 const posts = await getCollection('field', ({ data }) => data.category === '100-people');
+
+// 排序：按日期倒序
+const sortedPosts = posts.sort((a, b) => {
+  const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+  const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+  return dateB.getTime() - dateA.getTime();
+});
 ---
+
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>100 People | 田野</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>百人 | 100 People Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    
     <style>
-        body { background-color: #F3DE16; font-family: 'Noto Serif SC', serif; margin: 0; }
-        .header { text-align: center; padding: 80px 20px; border-bottom: 2px solid black; }
-        .header h1 { font-family: 'Playfair Display'; font-size: 50px; margin: 0; }
-        
+        :root {
+            --theme-yellow: #F3DE16; /* 田野主色调 */
+            --border-color: #000000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--theme-yellow); 
+            font-family: 'Noto Serif SC', serif; 
+            color: black; 
+            line-height: 1.6;
+        }
+
+        /* 1. 头部设计：保持和你首页一致的呼吸感 */
+        .header { 
+            text-align: center; 
+            padding: 100px 20px 60px; 
+            border-bottom: 2.5px solid var(--border-color); 
+        }
+        .header h1 { 
+            font-family: 'ZCOOL XiaoWei', serif; /* 题目使用你喜欢的艺术中文字体 */
+            font-size: clamp(60px, 10vw, 90px); 
+            margin: 0;
+            letter-spacing: 10px;
+        }
+        .header .en-sub { 
+            font-family: 'Cinzel', serif; 
+            font-size: 12px; 
+            letter-spacing: 5px; 
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-top: 20px;
+            display: block;
+        }
+
+        /* 2. 方块网格布局 */
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 40px; 
-            padding: 60px 40px; 
-            max-width: 1200px; margin: 0 auto;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 50px; 
+            padding: 80px 40px; 
+            max-width: 1300px; 
+            margin: 0 auto;
         }
+
+        /* 3. 人物特写卡片：沿用你喜欢的硬核阴影风格 */
         .card { 
-            background: white; border: 2px solid black; 
-            box-shadow: 10px 10px 0px black; padding: 20px;
-            transition: 0.3s; text-decoration: none; color: black;
+            background: white; 
+            border: 2.5px solid var(--border-color); 
+            box-shadow: 12px 12px 0px var(--border-color); 
+            padding: 0; /* 图片铺满上方 */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            text-decoration: none; 
+            color: black;
+            display: flex;
+            flex-direction: column;
         }
-        .card:hover { transform: translate(-5px, -5px); box-shadow: 15px 15px 0px black; }
-        .card img { width: 100%; height: 250px; object-fit: cover; border: 1px solid #eee; margin-bottom: 15px; }
-        .card h2 { font-family: 'ZCOOL XiaoWei'; font-size: 22px; margin: 10px 0; }
-        .card p { font-size: 14px; opacity: 0.8; line-height: 1.5; }
+
+        .card:hover { 
+            transform: translate(-6px, -6px); 
+            box-shadow: 20px 20px 0px var(--border-color); 
+        }
+
+        .card-image-box {
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            border-bottom: 2.5px solid var(--border-color);
+        }
+
+        .card-image-box img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            filter: grayscale(30%); /* 略带冷峻的人物特写感 */
+            transition: 0.5s;
+        }
+        
+        .card:hover .card-image-box img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 30px;
+        }
+
+        .card-content h2 { 
+            font-family: 'ZCOOL XiaoWei', serif; 
+            font-size: 28px; 
+            margin-bottom: 15px; 
+            line-height: 1.2;
+        }
+
+        .card-content .summary { 
+            font-size: 14px; 
+            opacity: 0.8; 
+            line-height: 1.8;
+            text-align: justify;
+            /* 限制摘要行数，保持整齐 */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding: 0 30px 30px;
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 2px;
+            opacity: 0.4;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .grid { padding: 40px 20px; gap: 30px; }
+            .header { padding: 60px 20px; }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>100 PEOPLE</h1>
-        <p style="font-family: 'Cinzel'; letter-spacing: 4px;">人物特写 / PROFILE</p>
-    </div>
-    <div class="grid">
-        {posts.map(post => (
+
+    <header class="header">
+        <h1>百人</h1>
+        <span class="en-sub">100 People / Profile</span>
+    </header>
+
+    <main class="grid">
+        {sortedPosts.map(post => (
             <a href={`/field/${post.slug}`} class="card">
-                <img src={post.data.image || 'https://via.placeholder.com/400x300'} />
-                <h2>{post.data.title}</h2>
-                <p>{post.data.summary}</p>
+                <div class="card-image-box">
+                    <img src={post.data.image || 'https://via.placeholder.com/600x800'} alt={post.data.title} />
+                </div>
+                <div class="card-content">
+                    <h2>{post.data.title}</h2>
+                    <p class="summary">{post.data.summary}</p>
+                </div>
+                <div class="card-footer">
+                    {post.data.location} / {post.data.date ? new Date(post.data.date).getFullYear() : '2026'}
+                </div>
             </a>
         ))}
-    </div>
+    </main>
+
+    <footer style="padding: 100px 0; text-align: center; opacity: 0.3; font-family: 'Cinzel'; font-size: 10px; letter-spacing: 5px;">
+        THE 100 PEOPLE PROJECT
+    </footer>
+
 </body>
 </html>
