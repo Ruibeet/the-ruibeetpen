@@ -1,138 +1,93 @@
 ---
 import { getCollection } from 'astro:content';
 
-const lifePosts = await getCollection('life');
-// 按日期排序
-const sortedLife = lifePosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+// 获取 life 文件夹下的所有 md 文件
+const lifePosts = await getCollection('life').catch(() => []);
+
+// 按日期排序：将最新的碎碎念排在最前面
+const sortedLife = lifePosts.sort((a, b) => {
+  const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+  const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+  return dateB.getTime() - dateA.getTime();
+});
+
+const title = "LIFE";
 ---
 
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>LIFE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@300&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,700&family=Noto+Serif+SC:wght@300;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        body { background-color: #f8f8f8; font-family: 'Noto Serif SC', serif; margin: 0; }
-        
+        :root {
+            --life-orange: #EEC43E; /* 沿用你首页 Life 的目录色 */
+            --border-color: #000000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--life-orange); /* 全局背景变为橙色 */
+            font-family: 'Noto Serif SC', serif; 
+            color: #000; 
+            line-height: 1.6;
+        }
+
         .layout {
             display: grid;
-            grid-template-columns: 1fr 300px; /* 左边流，右边侧边栏 */
+            grid-template-columns: 1fr 300px;
             max-width: 1400px;
             margin: 0 auto;
-            gap: 40px;
+            gap: 60px;
             padding: 80px 40px;
         }
 
-        /* 标题部分 */
+        /* 标题：纯英文，拉大间距 */
         .page-title {
             grid-column: 1 / -1;
             font-family: 'Cinzel', serif;
-            font-size: 60px;
-            letter-spacing: 15px;
+            font-size: clamp(60px, 8vw, 100px);
+            letter-spacing: 0.3em;
             text-align: left;
-            margin-bottom: 50px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 60px;
+            border-bottom: 3px solid var(--border-color);
             padding-bottom: 20px;
         }
 
-        /* 瀑布流容器 (CSS Columns 实现) */
+        /* 瀑布流布局 */
         .waterfall {
             column-count: 2;
-            column-gap: 20px;
+            column-gap: 30px;
         }
 
+        /* 每一条内容的卡片 */
         .post-card {
             break-inside: avoid;
-            margin-bottom: 20px;
-            background: white;
-            border: 1px solid #eee;
-            padding: 15px;
+            margin-bottom: 30px;
+            background: white; /* 卡片白底，在橙色背景上非常醒目 */
+            border: 2.5px solid var(--border-color);
+            box-shadow: 8px 8px 0px var(--border-color); /* 延续硬核阴影 */
+            padding: 20px;
             transition: 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--border-color);
         }
 
         .post-card img {
             width: 100%;
             height: auto;
-            display: block;
+            border: 1px solid #eee;
             margin-bottom: 15px;
         }
 
-        .post-card h3 { font-size: 18px; margin: 10px 0; }
-        .post-card p { font-size: 14px; color: #666; line-height: 1.6; }
-
-        /* 右侧社交栏 */
-        .sidebar {
-            position: sticky;
-            top: 80px;
-            height: fit-content;
-            padding: 20px;
-            border-left: 1px solid #eee;
-        }
-
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: black;
-            font-family: 'Cinzel', serif;
-            font-size: 14px;
-            margin-bottom: 25px;
-            transition: 0.3s;
-        }
-
-        .social-link i { font-size: 24px; }
-        .social-link:hover { opacity: 0.6; transform: translateX(5px); }
-
-        @media (max-width: 900px) {
-            .layout { grid-template-columns: 1fr; }
-            .sidebar { position: static; border-left: none; border-top: 1px solid #eee; }
-            .waterfall { column-count: 1; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="layout">
-        <h1 class="page-title">LIFE</h1>
-
-        <main class="waterfall">
-            {sortedLife.map(post => (
-                <div class="post-card">
-                    {post.data.image && <img src={post.data.image} alt="" />}
-                    <h3>{post.data.title}</h3>
-                    <div class="content">
-                        {/* 这里只显示摘要或前几句话 */}
-                        <p>{post.body.substring(0, 100)}...</p>
-                    </div>
-                    <small style="font-family: 'Cinzel'; font-size: 10px; opacity: 0.4;">
-                        {new Date(post.data.date).toLocaleDateString()}
-                    </small>
-                </div>
-            ))}
-        </main>
-
-        <aside class="sidebar">
-            <p style="font-family: 'Cinzel'; font-size: 12px; margin-bottom: 30px; opacity: 0.5;">Connect</p>
-            
-            <a href="https://instagram.com/你的账号" target="_blank" class="social-link">
-                <i class="fab fa-instagram"></i>
-                <span>Instagram</span>
-            </a>
-
-            <a href="https://linkedin.com/in/你的账号" target="_blank" class="social-link">
-                <i class="fab fa-linkedin"></i>
-                <span>LinkedIn</span>
-            </a>
-
-            <a href="你的Substack链接" target="_blank" class="social-link">
-                <i class="fas fa-envelope-open-text"></i>
-                <span>Substack</span>
-            </a>
-        </aside>
-    </div>
-
-</body>
-</html>
+        .post-card h3 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 22px; 
+            margin-bottom: 10px;
