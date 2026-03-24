@@ -36,25 +36,30 @@ const sortedPosts = posts.sort((a, b) => {
 
         /* 1. 头部设计：保持和你首页一致的呼吸感 */
         .header { 
-            text-align: center; 
-            padding: 100px 20px 60px; 
-            border-bottom: 2.5px solid var(--border-color); 
-        }
-        .header h1 { 
-            font-family: 'ZCOOL XiaoWei', serif; /* 题目使用你喜欢的艺术中文字体 */
-            font-size: clamp(60px, 10vw, 90px); 
-            margin: 0;
-            letter-spacing: 10px;
-        }
-        .header .en-sub { 
-            font-family: 'Cinzel', serif; 
-            font-size: 12px; 
-            letter-spacing: 5px; 
-            text-transform: uppercase;
-            opacity: 0.6;
-            margin-top: 20px;
-            display: block;
-        }
+    text-align: center; 
+    padding: 100px 20px 60px; 
+    border-bottom: 2.5px solid var(--border-color); 
+}
+
+.header h1 { 
+    font-family: 'ZCOOL XiaoWei', serif; /* 中文：百人 */
+    font-size: clamp(60px, 10vw, 90px); 
+    margin: 0;
+    letter-spacing: 12px; /* 增加中文字间距，更有仪式感 */
+    color: black;
+}
+
+.header .en-sub { 
+    font-family: 'Cinzel', serif; /* 英文：风格一致的古典衬线体 */
+    font-size: 13px; 
+    font-weight: 400;
+    letter-spacing: 6px; /* 关键：拉开字间距，营造呼吸感 */
+    text-transform: uppercase; /* 强制大写，增加正式感 */
+    opacity: 0.7;
+    margin-top: 25px;
+    display: block;
+    color: black;
+}
 
         /* 2. 方块网格布局 */
         .grid { 
@@ -146,9 +151,9 @@ const sortedPosts = posts.sort((a, b) => {
 <body>
 
     <header class="header">
-        <h1>百人</h1>
-        <span class="en-sub">100 People / Profile</span>
-    </header>
+    <h1>百人</h1>
+    <span class="en-sub">100 People / Profile</span>
+</header>
 
     <main class="grid">
         {sortedPosts.map(post => (
