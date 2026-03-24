@@ -31,7 +31,7 @@ const subtitle = "She's got a lot to say before going to hell";
             line-height: 1.6;
         }
 
-        header { padding: 100px 20px 60px; text-align: center; }
+        header.home-header { padding: 100px 20px 60px; text-align: center; }
         .main-title { 
             font-family: 'Playfair Display', serif; 
             font-size: clamp(50px, 10vw, 100px); 
@@ -48,20 +48,20 @@ const subtitle = "She's got a lot to say before going to hell";
             margin-top: 30px; 
         }
 
-        nav { 
+        nav.home-nav { 
             position: sticky; top: 0; z-index: 100; 
             padding: 20px 40px;
             background: rgba(167, 201, 212, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0,0,0,0.1);
         }
-        .nav-container { 
+        .home-nav-container { 
             display: flex; max-width: 1200px; margin: 0 auto; 
             border: 2.5px solid var(--border-color); 
             box-shadow: 6px 6px 0px var(--border-color);
-            background: black;
+            background: white; /* 恢复白色底色 */
         }
-        .nav-item { 
+        .home-nav-item { 
             flex: 1; position: relative; padding: 12px 5px; text-align: center; 
             text-decoration: none; color: white !important; 
             border-right: 2.5px solid var(--border-color); 
@@ -69,14 +69,14 @@ const subtitle = "She's got a lot to say before going to hell";
             display: flex; flex-direction: column; gap: 2px;
             cursor: pointer;
         }
-        .nav-item:last-child { border-right: none; }
-        .nav-item .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; }
-        .nav-item .en { font-family: 'Cinzel', serif; font-size: 8px; opacity: 0.9; letter-spacing: 1px; }
+        .home-nav-item:last-child { border-right: none; }
+        .home-nav-item .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; color: inherit; }
+        .home-nav-item .en { font-family: 'Cinzel', serif; font-size: 8px; opacity: 0.9; letter-spacing: 1px; color: inherit; }
         
-        .nav-item:hover { background-color: white !important; }
-        .nav-item:hover .cn, .nav-item:hover .en { color: black !important; }
+        .home-nav-item:hover { background-color: white !important; }
+        .home-nav-item:hover .cn, .home-nav-item:hover .en { color: black !important; }
 
-        /* 下拉菜单通用逻辑 */
+        /* 下拉菜单逻辑 */
         .dropdown-content {
             display: none;
             position: absolute;
@@ -87,7 +87,7 @@ const subtitle = "She's got a lot to say before going to hell";
             box-shadow: 6px 6px 0px var(--border-color);
             z-index: 1000;
         }
-        .nav-item:hover .dropdown-content { display: block; }
+        .home-nav-item:hover .dropdown-content { display: block; }
 
         .dropdown-link {
             display: block;
@@ -102,36 +102,26 @@ const subtitle = "She's got a lot to say before going to hell";
         .dropdown-link:hover { background-color: white !important; }
         .dropdown-link:hover .cn, .dropdown-link:hover .en { color: black !important; }
 
-        /* 文章列表样式 */
+        /* 内容列表 */
         .content-grid { max-width: 1100px; margin: 80px auto; padding: 0 40px; }
         .essay-card { 
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 60px;
-            margin-bottom: 120px;
-            text-decoration: none; color: black;
-            align-items: center;
+            display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px;
+            margin-bottom: 120px; text-decoration: none; color: black; align-items: center;
         }
         .essay-card:nth-child(even) { grid-template-columns: 1fr 1.2fr; }
         .essay-card:nth-child(even) .card-image-wrapper { order: 2; }
         .card-image-wrapper {
-            position: relative;
-            border: 2px solid black;
-            padding: 10px;
-            background: white;
-            box-shadow: 15px 15px 0px rgba(0,0,0,0.05);
-            transition: 0.4s;
+            position: relative; border: 2px solid black; padding: 10px;
+            background: white; box-shadow: 15px 15px 0px rgba(0,0,0,0.05); transition: 0.4s;
         }
         .card-image { width: 100%; height: 450px; object-fit: cover; }
         .essay-title { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; margin: 20px 0; }
         .essay-desc { font-size: 16px; line-height: 1.8; opacity: 0.8; }
 
-        /* 订阅与支持 */
+        /* Newsletter & Support */
         .newsletter-box {
-            max-width: 900px; margin: 100px auto;
-            background: #EEC43E; border: 3px solid black;
-            padding: 80px 40px; text-align: center;
-            box-shadow: 15px 15px 0px black;
+            max-width: 900px; margin: 100px auto; background: #EEC43E;
+            border: 3px solid black; padding: 80px 40px; text-align: center; box-shadow: 15px 15px 0px black;
         }
         .email-form { display: flex; justify-content: center; max-width: 500px; margin: 40px auto 0; }
         .email-form input { flex: 1; padding: 15px; border: 2px solid black; border-right: none; outline: none; }
@@ -152,24 +142,23 @@ const subtitle = "She's got a lot to say before going to hell";
         @media (max-width: 768px) {
             .essay-card, .essay-card:nth-child(even) { grid-template-columns: 1fr; gap: 30px; }
             .card-image-wrapper { order: 1 !important; }
-            .essay-title { font-size: 28px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <header class="home-header">
         <h1 class="main-title">{title}</h1>
         <p class="subtitle">{subtitle}</p>
     </header>
 
-    <nav>
-        <div class="nav-container">
-            <a href="/" class="nav-item" style="background-color: #000000;">
+    <nav class="home-nav">
+        <div class="home-nav-container">
+            <a href="/" class="home-nav-item" style="background-color: #000000;">
                 <span class="cn">首页</span><span class="en">Home</span>
             </a>
             
-            <div class="nav-item" style="background-color: #0A9C49;">
+            <div class="home-nav-item" style="background-color: #0A9C49;">
                 <span class="cn">小说</span><span class="en">Fiction</span>
                 <div class="dropdown-content" style="background-color: #0A9C49;">
                     <a href="/novel/long-form" class="dropdown-link">
@@ -181,35 +170,30 @@ const subtitle = "She's got a lot to say before going to hell";
                 </div>
             </div>
 
-            <a href="/essays" class="nav-item" style="background-color: #DF9225;">
+            <a href="/essays" class="home-nav-item" style="background-color: #DF9225;">
                 <span class="cn">杂文</span><span class="en">Blogs</span>
             </a>
 
-            <a href="/life" class="nav-item" style="background-color: #EEC43E; color: black !important;">
+            <a href="/life" class="home-nav-item" style="background-color: #EEC43E; color: black !important;">
                 <span class="cn">生活</span><span class="en">Life</span>
             </a>
 
-            <div class="nav-item" style="background-color: #F3DE16; color: black !important; cursor: default;">
-    <div style="display: flex; flex-direction: column; gap: 2px;">
-        <span class="cn" style="color: black;">田野</span>
-        <span class="en" style="color: black;">Field</span>
-    </div>
-    
-    <div class="dropdown-content" style="background-color: #F3DE16;">
-        <a href="/field/100-people" class="dropdown-link">
-            <span class="cn" style="color: black;">100人</span>
-            <span class="en" style="color: black;">100 People</span>
-        </a>
-        <a href="/field/roots" class="dropdown-link">
-            <span class="cn" style="color: black;">根</span>
-            <span class="en" style="color: black;">Roots</span>
-        </a>
-        <a href="/field/mountains" class="dropdown-link">
-            <span class="cn" style="color: black;">山</span>
-            <span class="en" style="color: black;">Mountains</span>
-        </a>
-    </div>
-</div>
+            <div class="home-nav-item" style="background-color: #F3DE16; color: black !important; cursor: default;">
+                <span class="cn">田野</span><span class="en">Field</span>
+                <div class="dropdown-content" style="background-color: #F3DE16;">
+                    <a href="/field/100-people" class="dropdown-link">
+                        <span class="cn">100人</span><span class="en">100 People</span>
+                    </a>
+                    <a href="/field/roots" class="dropdown-link">
+                        <span class="cn">根</span><span class="en">Roots</span>
+                    </a>
+                    <a href="/field/mountains" class="dropdown-link">
+                        <span class="cn">山</span><span class="en">Mountains</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <main class="content-grid">
         {latestEssays.map((essay) => (
