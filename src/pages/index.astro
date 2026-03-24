@@ -1,12 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
 const allEssays = await getCollection('essays').catch(() => []);
+// 按时间排序并只取前3篇
 const latestEssays = allEssays
   .sort((a, b) => {
     const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
     const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
     return dateB.getTime() - dateA.getTime();
-  });
+  })
+  .slice(0, 3);
 
 const title = "Rui & Ruibeet";
 const subtitle = "She's got a lot to say before going to hell";
@@ -29,136 +31,236 @@ const subtitle = "She's got a lot to say before going to hell";
             background-color: var(--bg-color); 
             color: #1a1a1a; 
             line-height: 1.6;
+            overflow-x: hidden; /* 防止移动端溢出 */
         }
 
-        header.home-header { padding: 100px 20px 60px; text-align: center; }
+        /* --- Header & Nav (保持不变) --- */
+        header.home-header { padding: 80px 20px 50px; text-align: center; }
         .main-title { 
             font-family: 'Playfair Display', serif; 
-            font-size: clamp(50px, 10vw, 100px); 
+            font-size: clamp(40px, 8vw, 80px); 
             font-weight: 700; 
             letter-spacing: -0.02em;
-            line-height: 0.9;
+            line-height: 1.0;
         }
         .subtitle { 
             font-family: 'Cinzel', serif; 
-            font-size: 11px; 
+            font-size: 10px; 
             letter-spacing: 0.5em; 
             text-transform: uppercase; 
             opacity: 0.6; 
-            margin-top: 30px; 
+            margin-top: 25px; 
         }
 
         nav.home-nav { 
             position: sticky; top: 0; z-index: 100; 
-            padding: 20px 40px;
+            padding: 15px 30px;
             background: rgba(167, 201, 212, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         .home-nav-container { 
-            display: flex; max-width: 1200px; margin: 0 auto; 
-            border: 2.5px solid var(--border-color); 
-            box-shadow: 6px 6px 0px var(--border-color);
+            display: flex; max-width: 1100px; margin: 0 auto; 
+            border: 2px solid var(--border-color); 
+            box-shadow: 5px 5px 0px var(--border-color);
             background: white;
         }
         .home-nav-item { 
-            flex: 1; position: relative; padding: 12px 5px; text-align: center; 
+            flex: 1; position: relative; padding: 10px 5px; text-align: center; 
             text-decoration: none; color: white !important; 
-            border-right: 2.5px solid var(--border-color); 
+            border-right: 2px solid var(--border-color); 
             transition: all 0.3s ease;
             display: flex; flex-direction: column; gap: 2px;
             cursor: pointer;
         }
         .home-nav-item:last-child { border-right: none; }
-        .home-nav-item .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 15px; color: inherit; }
+        .home-nav-item .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 14px; color: inherit; }
         .home-nav-item .en { font-family: 'Cinzel', serif; font-size: 8px; opacity: 0.9; letter-spacing: 1px; color: inherit; }
-        
         .home-nav-item:hover { background-color: white !important; }
         .home-nav-item:hover .cn, .home-nav-item:hover .en { color: black !important; }
 
         .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: -2.5px;
-            width: calc(100% + 5px);
-            border: 2.5px solid var(--border-color);
-            box-shadow: 6px 6px 0px var(--border-color);
-            z-index: 1000;
+            display: none; position: absolute; top: 100%; left: -2px; width: calc(100% + 4px);
+            border: 2px solid var(--border-color); box-shadow: 5px 5px 0px var(--border-color); z-index: 1000;
         }
         .home-nav-item:hover .dropdown-content { display: block; }
-
         .dropdown-link {
-            display: block;
-            padding: 15px 10px;
-            text-decoration: none;
-            color: white !important;
-            border-bottom: 2.5px solid var(--border-color);
-            transition: 0.2s;
-            text-align: center;
+            display: block; padding: 12px 10px; text-decoration: none; color: white !important;
+            border-bottom: 2px solid var(--border-color); transition: 0.2s; text-align: center;
         }
         .dropdown-link:last-child { border-bottom: none; }
         .dropdown-link:hover { background-color: white !important; }
         .dropdown-link:hover .cn, .dropdown-link:hover .en { color: black !important; }
 
-        .content-grid { max-width: 1100px; margin: 80px auto; padding: 0 40px; }
-        .essay-card { 
-            display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px;
-            margin-bottom: 120px; text-decoration: none; color: black; align-items: center;
+        /* --- ✨ 新的紧凑型三列内容列表 --- */
+        .content-grid-wrapper {
+            max-width: 1200px;
+            margin: 60px auto 100px;
+            padding: 0 30px;
         }
-        .essay-card:nth-child(even) { grid-template-columns: 1fr 1.2fr; }
-        .essay-card:nth-child(even) .card-image-wrapper { order: 2; }
-        .card-image-wrapper {
-            position: relative; border: 2px solid black; padding: 10px;
-            background: white; box-shadow: 15px 15px 0px rgba(0,0,0,0.05); transition: 0.4s;
+        
+        .compact-essay-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* ✨ 强制一行三列 */
+            gap: 30px; 
         }
-        .card-image { width: 100%; height: 450px; object-fit: cover; }
-        .essay-title { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; margin: 20px 0; }
-        .essay-desc { font-size: 16px; line-height: 1.8; opacity: 0.8; }
 
-        /* --- Newsletter & Patron 字体系统深度对齐 --- */
+        .essay-card { 
+            display: block; /* 整个卡片都是链接 */
+            background: white;
+            border: 2px solid var(--border-color); 
+            box-shadow: 8px 8px 0px var(--border-color); /* 统一的硬核阴影 */
+            text-decoration: none; 
+            color: black; 
+            transition: 0.3s ease;
+            overflow: hidden; /* 防止图片溢出 */
+            height: 100%; /* 确保卡片等高 */
+            display: flex;
+            flex-direction: column; /* 内容垂直排列 */
+        }
+        
+        /* 鼠标悬停时的微互动 */
+        .essay-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 11px 11px 0px var(--border-color);
+        }
+
+        .card-image-wrapper {
+            width: 100%;
+            height: 220px; /* ✨ 固定高度，缩小图片 */
+            border-bottom: 2px solid black; /* 图片与文字分割线 */
+            overflow: hidden;
+        }
+        
+        .card-image { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* 确保图片覆盖且不变形 */
+            transition: transform 0.4s ease; /* 图片悬停放大效果 */
+        }
+        
+        .essay-card:hover .card-image {
+            transform: scale(1.05); /* 微小的放大感 */
+        }
+
+        .card-text-content {
+            padding: 25px; /* 文字内容的内边距 */
+            flex-grow: 1; /* 让文字部分占据剩余空间，确保等高 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* 将元数据推到底部 */
+        }
+
+        .essay-title { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 26px; /* ✨ 缩小标题字体 */
+            font-weight: 700; 
+            line-height: 1.3;
+            margin-bottom: 12px;
+            color: black;
+            /* 标题截断：最多显示三行 */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .essay-desc { 
+            font-size: 14px; /* ✨ 缩小描述字体 */
+            line-height: 1.6; 
+            opacity: 0.7; 
+            color: #333;
+            margin-bottom: 20px;
+            /* 描述截断：最多显示四行 */
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .card-meta {
+            font-family: 'Cinzel', serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            opacity: 0.4;
+            display: block;
+            margin-top: auto; /* 推到底部 */
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1); /* 淡淡的分隔线 */
+        }
+
+        /* --- 查看全部档案按钮 (推荐增加) --- */
+        .view-all-wrapper {
+            text-align: center;
+            margin: -20px 0 100px;
+        }
+        .view-all-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border: 2px solid black;
+            background: white;
+            color: black;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 3px;
+            box-shadow: 6px 6px 0px black;
+            transition: 0.3s ease;
+        }
+        .view-all-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px black;
+        }
+
+        /* --- Newsletter & Patron (保持不变) --- */
         .home-newsletter-box {
-            max-width: 900px; margin: 100px auto; background: #EEC43E;
-            border: 3px solid black; padding: 80px 40px; text-align: center; box-shadow: 15px 15px 0px black;
+            max-width: 900px; margin: 0 auto 100px; background: #EEC43E;
+            border: 3px solid black; padding: 60px 40px; text-align: center; box-shadow: 15px 15px 0px black;
         }
         .home-newsletter-box h2 {
             font-family: 'Cinzel', serif;
-            font-size: 60px; margin-bottom: 25px; letter-spacing: 12px; font-weight: 700;
+            font-size: clamp(36px, 6vw, 56px); margin-bottom: 20px; letter-spacing: 10px; font-weight: 700;
             text-transform: uppercase; color: black;
         }
         .newsletter-desc {
             font-family: 'Playfair Display', serif;
-            font-size: 14px; opacity: 0.7; letter-spacing: 2px; margin-bottom: 50px;
+            font-size: 13px; opacity: 0.7; letter-spacing: 2px; margin-bottom: 40px;
         }
-        .home-newsletter-box .email-form { display: flex; justify-content: center; max-width: 550px; margin: 0 auto; }
-        .home-newsletter-box .email-form input { flex: 1; padding: 15px; border: 2px solid black; border-right: none; outline: none; font-family: 'Noto Serif SC', serif; }
+        .home-newsletter-box .email-form { display: flex; justify-content: center; max-width: 500px; margin: 0 auto; }
+        .home-newsletter-box .email-form input { flex: 1; padding: 12px; border: 2px solid black; border-right: none; outline: none; font-family: 'Noto Serif SC', serif; }
         .home-newsletter-box .email-form button { 
-            background: black; color: white; padding: 0 35px; border: 2px solid black; cursor: pointer; 
+            background: black; color: white; padding: 0 30px; border: 2px solid black; cursor: pointer; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
         }
-        .home-newsletter-box .email-form button .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 16px; font-weight: bold; }
-        .home-newsletter-box .email-form button .en { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px; }
-        .free-sub-notice { font-family: 'Noto Serif SC', serif; font-size: 11px; opacity: 0.5; margin-top: 20px; letter-spacing: 2px; }
+        .home-newsletter-box .email-form button .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 14px; font-weight: bold; }
+        .home-newsletter-box .email-form button .en { font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 1px; }
+        .free-sub-notice { font-family: 'Noto Serif SC', serif; font-size: 10px; opacity: 0.5; margin-top: 15px; letter-spacing: 2px; }
 
-        .home-patron-section { padding-bottom: 120px; text-align: center; }
+        .home-patron-section { padding-bottom: 100px; text-align: center; }
         .home-patron-card { 
             display: inline-block; background: white; border: 2.5px solid black;
-            padding: 60px 80px; box-shadow: 12px 12px 0px #0A9C49; max-width: 700px;
+            padding: 50px 60px; box-shadow: 12px 12px 0px #0A9C49; max-width: 650px;
         }
-        .home-patron-card h3 { font-family: 'ZCOOL XiaoWei', serif; font-size: 32px; margin-bottom: 12px; color: black; }
-        .home-patron-card .en-sub { font-family: 'Playfair Display', serif; font-style: italic; opacity: 0.6; display: block; font-size: 12px; margin-bottom: 35px; }
-        .home-patron-card .patron-text p { font-family: 'Noto Serif SC', serif; font-size: 15px; line-height: 1.8; color: #1a1a1a; }
+        .home-patron-card h3 { font-family: 'ZCOOL XiaoWei', serif; font-size: 28px; margin-bottom: 10px; color: black; }
+        .home-patron-card .en-sub { font-family: 'Playfair Display', serif; font-style: italic; opacity: 0.6; display: block; font-size: 11px; margin-bottom: 30px; }
+        .home-patron-card .patron-text p { font-family: 'Noto Serif SC', serif; font-size: 14px; line-height: 1.8; color: #1a1a1a; margin-bottom: 8px;}
         .redbull-btn { 
-            display: inline-block; background: black; color: white; padding: 20px 45px; margin-top: 40px;
-            text-decoration: none; font-family: 'Cinzel', serif; font-weight: 700; font-size: 13px; letter-spacing: 2px;
+            display: inline-block; background: black; color: white; padding: 18px 40px; margin-top: 35px;
+            text-decoration: none; font-family: 'Cinzel', serif; font-weight: 700; font-size: 12px; letter-spacing: 2px;
         }
 
-        footer { padding: 100px 0; text-align: center; opacity: 0.3; font-size: 10px; letter-spacing: 0.5em; }
+        footer { padding: 80px 0; text-align: center; opacity: 0.3; font-size: 9px; letter-spacing: 0.5em; }
 
+        /* --- 响应式适配 --- */
+        @media (max-width: 900px) {
+            .compact-essay-grid { grid-template-columns: 1fr; gap: 40px; } /* 移动端切回一列 */
+            .essay-card { max-width: 450px; margin: 0 auto; }
+            .content-grid-wrapper { padding: 0 20px; }
+        }
         @media (max-width: 768px) {
-            .essay-card, .essay-card:nth-child(even) { grid-template-columns: 1fr; gap: 30px; }
-            .card-image-wrapper { order: 1 !important; }
-            .home-patron-card { padding: 40px 20px; }
+            .home-patron-card { padding: 30px 20px; }
+            .home-newsletter-box { padding: 40px 20px; }
         }
     </style>
 </head>
@@ -212,20 +314,32 @@ const subtitle = "She's got a lot to say before going to hell";
         </div>
     </nav>
 
-    <main class="content-grid">
-        {latestEssays.map((essay) => (
-            <a href={`/essays/${essay.slug}`} class="essay-card">
-                <div class="card-image-wrapper">
-                    <img src={essay.data.image || 'https://via.placeholder.com/800x600'} alt={essay.data.title} class="card-image" />
-                </div>
-                <div class="card-text">
-                    <div class="essay-category">{new Date(essay.data.date).getFullYear()} / {essay.data.category}</div>
-                    <h2 class="essay-title">{essay.data.title}</h2>
-                    <p class="essay-desc">{essay.data.description}</p>
-                </div>
-            </a>
-        ))}
+    <main class="content-grid-wrapper">
+        <div class="compact-essay-grid">
+            {latestEssays.map((essay) => (
+                <a href={`/essays/${essay.slug}`} class="essay-card">
+                    <div class="card-image-wrapper">
+                        <img src={essay.data.image || 'https://via.placeholder.com/800x600'} alt={essay.data.title} class="card-image" />
+                    </div>
+                    <div class="card-text-content">
+                        <div>
+                            <h2 class="essay-title">{essay.data.title}</h2>
+                            <p class="essay-desc">{essay.data.description}</p>
+                        </div>
+                        <small class="card-meta">
+                            {new Date(essay.data.date).getFullYear()} // {essay.data.category} // Rui's Archive
+                        </small>
+                    </div>
+                </a>
+            ))}
+        </div>
     </main>
+
+    <div class="view-all-wrapper">
+        <a href="/essays" class="view-all-btn">
+            VIEW ALL ARCHIVE
+        </a>
+    </div>
 
     <section class="home-newsletter-box">
         <div class="newsletter-wrapper">
