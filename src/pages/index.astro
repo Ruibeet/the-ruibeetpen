@@ -189,22 +189,27 @@ const subtitle = "She's got a lot to say before going to hell";
                 <span class="cn">生活</span><span class="en">Life</span>
             </a>
 
-            <div class="nav-item" style="background-color: #F3DE16; color: black !important;">
-                <span class="cn" style="color: black;">田野</span><span class="en" style="color: black;">Field</span>
-                <div class="dropdown-content" style="background-color: #F3DE16;">
-                    <a href="/field/100-people" class="dropdown-link">
-                        <span class="cn" style="color: black;">100人</span><span class="en" style="color: black;">100 People</span>
-                    </a>
-                    <a href="/field/roots" class="dropdown-link">
-                        <span class="cn" style="color: black;">根</span><span class="en" style="color: black;">Roots</span>
-                    </a>
-                    <a href="/field/mountains" class="dropdown-link">
-                        <span class="cn" style="color: black;">山</span><span class="en" style="color: black;">Mountains</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+            <div class="nav-item" style="background-color: #F3DE16; color: black !important; cursor: default;">
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span class="cn" style="color: black;">田野</span>
+        <span class="en" style="color: black;">Field</span>
+    </div>
+    
+    <div class="dropdown-content" style="background-color: #F3DE16;">
+        <a href="/field/100-people" class="dropdown-link">
+            <span class="cn" style="color: black;">100人</span>
+            <span class="en" style="color: black;">100 People</span>
+        </a>
+        <a href="/field/roots" class="dropdown-link">
+            <span class="cn" style="color: black;">根</span>
+            <span class="en" style="color: black;">Roots</span>
+        </a>
+        <a href="/field/mountains" class="dropdown-link">
+            <span class="cn" style="color: black;">山</span>
+            <span class="en" style="color: black;">Mountains</span>
+        </a>
+    </div>
+</div>
 
     <main class="content-grid">
         {latestEssays.map((essay) => (
