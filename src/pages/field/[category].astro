@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+
+// 1. 定义哪些分类可以生成页面
+export async function getStaticPaths() {
+  return [
+    { params: { category: '100-people' }, props: { name: '100人', en: '100 People' } },
+    { params: { category: 'roots' }, props: { name: '根', en: 'Roots' } },
+    { params: { category: 'mountains' }, props: { name: '山', en: 'Mountains' } },
+  ];
+}
+
+const { category } = Astro.params;
+const { name, en } = Astro.props;
+
+// 2. 获取该分类下的所有文章
+const allPosts = await getCollection('field');
+const posts = allPosts.filter(post => post.data.category === category);
+---
+
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>{name} | 田野调查</title>
+    <style>
+        body { background: #F3DE16; font-family: serif; margin: 0; padding: 50px; }
+        .header { border-bottom: 3px solid black; padding-bottom: 20px; margin-bottom: 40px; }
+        .post-card { background: white; border: 2px solid black; padding: 20px; margin-bottom: 20px; box-shadow: 8px 8px 0px black; }
+        .nav-back { text-decoration: none; color: black; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <a href="/" class="nav-back">← 返回首页</a>
+    <div class="header">
+        <h1 style="font-size: 48px; margin: 0;">{name}</h1>
+        <p style="text-transform: uppercase; letter-spacing: 2px;">{en}</p>
+    </div>
+
+    <div class="list">
+        {posts.length > 0 ? posts.map(post => (
+            <div class="post-card">
+                <h3>{post.data.title}</h3>
+                <p style="font-size: 14px; opacity: 0.7;">{post.data.date} | {post.data.location}</p>
+                <p>{post.data.summary}</p>
+            </div>
+        )) : <p>该分类下暂无报告内容。</p>}
+    </div>
+</body>
+</html>
