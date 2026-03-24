@@ -1,13 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
+
 const title = "Life Fragments";
 const subtitle = "Moments, Memories, and Miscellany";
 
-// 获取所有生活随笔，按日期倒序排列
-const allLifePosts = await getCollection('life').catch(() => []);
-const sortedPosts = allLifePosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+// 1. 获取所有内容。注意：这里改成了 'field'，对应你的文件夹
+const allLifePosts = await getCollection('field');
 
-// --- 核心逻辑：判断是否在开发环境 ---
+// 2. 排序并处理内容渲染
+const sortedPosts = await Promise.all(
+  allLifePosts.sort((a, b) => {
+    const dateA = a.data.date instanceof Date ? a.data.date : new Date(a.data.date);
+    const dateB = b.data.date instanceof Date ? b.data.date : new Date(b.data.date);
+    return dateB.getTime() - dateA.getTime();
+  }).map(async (post) => {
+    const { Content } = await post.render(); // 这一步是把 Markdown 变成网页内容
+    return { ...post, Content };
+  })
+);
+
 const isDev = import.meta.env.DEV; 
 ---
 
@@ -19,7 +30,7 @@ const isDev = import.meta.env.DEV;
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg-color: #EEC43E; /* 使用首页“生活”块的亮黄色 */
+            --bg-color: #EEC43E; 
             --border-color: #000000; 
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,82 +40,11 @@ const isDev = import.meta.env.DEV;
             color: black; 
             line-height: 1.8;
         }
-
         .container { max-width: 900px; margin: 0 auto; padding: 60px 40px; }
-
-        /* 1. Header */
         .page-header { margin-bottom: 60px; text-align: center; }
         .page-header h1 { font-family: 'Playfair Display'; font-size: clamp(40px, 8vw, 60px); color: black; }
         .page-header p { font-family: 'Cinzel'; letter-spacing: 4px; opacity: 0.7; font-size: 11px; margin-top: 15px; }
-
-        /* =========================================
-           2. 核心：发布界面 (Tumblr 风格，仅开发环境可见)
-           ========================================= */
-        .admin-publish-box {
-            background: white;
-            border: 3px solid black;
-            padding: 30px;
-            margin-bottom: 80px;
-            box-shadow: 12px 12px 0px black;
-            position: relative;
-        }
-        .admin-publish-box::before {
-            content: "ADMIN ONLY / 本地发布";
-            position: absolute;
-            top: -15px;
-            left: 20px;
-            background: black;
-            color: white;
-            font-family: 'Cinzel';
-            font-size: 10px;
-            padding: 2px 10px;
-            letter-spacing: 2px;
-        }
-        
-        .publish-form { display: flex; flex-direction: column; gap: 20px; }
-        
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .form-group label { font-family: 'ZCOOL XiaoWei'; font-size: 16px; }
-        .form-group input, .form-group textarea {
-            padding: 12px;
-            border: 2px solid black;
-            font-family: 'Noto Serif SC', serif;
-            font-size: 14px;
-            outline: none;
-        }
-        .form-group textarea { resize: vertical; min-height: 150px; }
-        
-        /* 图片上传占位 */
-        .image-upload-placeholder {
-            border: 2px dashed #ccc;
-            padding: 40px;
-            text-align: center;
-            color: #999;
-            font-family: 'Cinzel';
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .image-upload-placeholder:hover { border-color: black; color: black; }
-
-        .publish-btn {
-            background: black;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-family: 'Cinzel';
-            font-weight: 700;
-            font-size: 12px;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: 0.3s;
-            align-self: flex-end; /* 按钮靠右 */
-        }
-        .publish-btn:hover { background: #333; transform: translate(-2px, -2px); box-shadow: 4px 4px 0px rgba(0,0,0,0.2); }
-
-
-        /* 3. 社媒流布局 (Instagram/Tumblr 风格) */
         .life-stream { display: flex; flex-direction: column; gap: 60px; }
-
         .life-post-card {
             background: white;
             border: 2.5px solid black;
@@ -112,80 +52,30 @@ const isDev = import.meta.env.DEV;
             box-shadow: 10px 10px 0px black;
             transition: 0.4s;
         }
-        .life-post-card:hover { transform: translate(-3px, -3px); box-shadow: 14px 14px 0px black; }
-
         .post-meta { font-family: 'Cinzel'; font-size: 11px; opacity: 0.5; margin-bottom: 25px; letter-spacing: 2px; }
-        
-        /* 图片区域：适配 Instagram 风格 */
-        .post-image-wrapper {
-            width: 100%;
-            margin-bottom: 30px;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-        .post-image { 
-            width: 100%; 
-            max-height: 600px; /* 限制高度，防止过长 */
-            object-fit: cover; /* 裁剪适配 */
-        }
-
         .post-content { font-size: 15px; line-height: 2; opacity: 0.9; text-align: justify; }
-        /* 让 .md 文件里的图片也能适配 */
-        .post-content img { max-width: 100%; height: auto; display: block; margin: 20px auto; border: 1px solid black; }
-
+        .post-content h2 { font-family: 'ZCOOL XiaoWei'; font-size: 28px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <header class="page-header">
             <h1>{title}</h1>
             <p>{subtitle}</p>
         </header>
 
-        {isDev && (
-            <section class="admin-publish-box">
-                <form class="publish-form">
-                    <div class="form-group">
-                        <label for="post-title">题目 (Title)</label>
-                        <input type="text" id="post-title" placeholder="可选" />
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>图片 (Image - Instagram 风格)</label>
-                        <div class="image-upload-placeholder">
-                            + CLICK TO UPLOAD OR DRAG IMAGE
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="post-content">内容 (Content - 支持 Markdown)</label>
-                        <textarea id="post-content" placeholder="此刻的想法..."></textarea>
-                    </div>
-
-                    <button type="submit" class="publish-btn">PUBLISH TO ARCHIVE</button>
-                </form>
-            </section>
-        )}
-
-
         <main class="life-stream">
-            {sortedPosts.map((post) => (
+            {sortedPosts.map(({ data, Content }) => (
                 <article class="life-post-card">
                     <div class="post-meta">
-                        {post.data.date.toLocaleDateString()} / {post.data.tags?.join(', ') || 'fragments'}
+                        {data.date ? new Date(data.date).toLocaleDateString() : ''} / {data.category}
                     </div>
 
-                    {post.data.image && (
-                        <div class="post-image-wrapper">
-                            <img src={post.data.image} alt={post.data.title || 'Life image'} class="post-image" />
-                        </div>
-                    )}
-
                     <div class="post-content">
-                        {post.data.title && (
-                            <h2 style="font-family: 'ZCOOL XiaoWei'; font-size: 28px; margin-bottom: 20px;">{post.data.title}</h2>
+                        {data.title && (
+                            <h2>{data.title}</h2>
                         )}
-                        <post.Content />
+                        <Content />
                     </div>
                 </article>
             ))}
@@ -195,6 +85,5 @@ const isDev = import.meta.env.DEV;
             EST. 2026 / RUI & RUIBEET LIFE ARCHIVE
         </footer>
     </div>
-
 </body>
 </html>
