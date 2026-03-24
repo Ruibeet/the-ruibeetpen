@@ -59,7 +59,7 @@ const subtitle = "She's got a lot to say before going to hell";
             display: flex; max-width: 1200px; margin: 0 auto; 
             border: 2.5px solid var(--border-color); 
             box-shadow: 6px 6px 0px var(--border-color);
-            background: white; /* 恢复白色底色 */
+            background: white;
         }
         .home-nav-item { 
             flex: 1; position: relative; padding: 12px 5px; text-align: center; 
@@ -76,7 +76,6 @@ const subtitle = "She's got a lot to say before going to hell";
         .home-nav-item:hover { background-color: white !important; }
         .home-nav-item:hover .cn, .home-nav-item:hover .en { color: black !important; }
 
-        /* 下拉菜单逻辑 */
         .dropdown-content {
             display: none;
             position: absolute;
@@ -102,7 +101,6 @@ const subtitle = "She's got a lot to say before going to hell";
         .dropdown-link:hover { background-color: white !important; }
         .dropdown-link:hover .cn, .dropdown-link:hover .en { color: black !important; }
 
-        /* 内容列表 */
         .content-grid { max-width: 1100px; margin: 80px auto; padding: 0 40px; }
         .essay-card { 
             display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px;
@@ -118,23 +116,41 @@ const subtitle = "She's got a lot to say before going to hell";
         .essay-title { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; margin: 20px 0; }
         .essay-desc { font-size: 16px; line-height: 1.8; opacity: 0.8; }
 
-        /* Newsletter & Support */
-        .newsletter-box {
+        /* --- Newsletter & Patron 字体系统深度对齐 --- */
+        .home-newsletter-box {
             max-width: 900px; margin: 100px auto; background: #EEC43E;
             border: 3px solid black; padding: 80px 40px; text-align: center; box-shadow: 15px 15px 0px black;
         }
-        .email-form { display: flex; justify-content: center; max-width: 500px; margin: 40px auto 0; }
-        .email-form input { flex: 1; padding: 15px; border: 2px solid black; border-right: none; outline: none; }
-        .email-form button { background: black; color: white; padding: 0 30px; border: 2px solid black; cursor: pointer; }
-
-        .patron-section { padding-bottom: 120px; text-align: center; }
-        .patron-card { 
-            display: inline-block; background: white; border: 2.5px solid black;
-            padding: 60px 80px; box-shadow: 12px 12px 0px #0A9C49;
+        .home-newsletter-box h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 60px; margin-bottom: 25px; letter-spacing: 12px; font-weight: 700;
+            text-transform: uppercase; color: black;
         }
+        .newsletter-desc {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px; opacity: 0.7; letter-spacing: 2px; margin-bottom: 50px;
+        }
+        .home-newsletter-box .email-form { display: flex; justify-content: center; max-width: 550px; margin: 0 auto; }
+        .home-newsletter-box .email-form input { flex: 1; padding: 15px; border: 2px solid black; border-right: none; outline: none; font-family: 'Noto Serif SC', serif; }
+        .home-newsletter-box .email-form button { 
+            background: black; color: white; padding: 0 35px; border: 2px solid black; cursor: pointer; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+        }
+        .home-newsletter-box .email-form button .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 16px; font-weight: bold; }
+        .home-newsletter-box .email-form button .en { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px; }
+        .free-sub-notice { font-family: 'Noto Serif SC', serif; font-size: 11px; opacity: 0.5; margin-top: 20px; letter-spacing: 2px; }
+
+        .home-patron-section { padding-bottom: 120px; text-align: center; }
+        .home-patron-card { 
+            display: inline-block; background: white; border: 2.5px solid black;
+            padding: 60px 80px; box-shadow: 12px 12px 0px #0A9C49; max-width: 700px;
+        }
+        .home-patron-card h3 { font-family: 'ZCOOL XiaoWei', serif; font-size: 32px; margin-bottom: 12px; color: black; }
+        .home-patron-card .en-sub { font-family: 'Playfair Display', serif; font-style: italic; opacity: 0.6; display: block; font-size: 12px; margin-bottom: 35px; }
+        .home-patron-card .patron-text p { font-family: 'Noto Serif SC', serif; font-size: 15px; line-height: 1.8; color: #1a1a1a; }
         .redbull-btn { 
-            display: inline-block; background: black; color: white; padding: 18px 40px;
-            text-decoration: none; font-family: 'Cinzel'; font-weight: 700;
+            display: inline-block; background: black; color: white; padding: 20px 45px; margin-top: 40px;
+            text-decoration: none; font-family: 'Cinzel', serif; font-weight: 700; font-size: 13px; letter-spacing: 2px;
         }
 
         footer { padding: 100px 0; text-align: center; opacity: 0.3; font-size: 10px; letter-spacing: 0.5em; }
@@ -142,6 +158,7 @@ const subtitle = "She's got a lot to say before going to hell";
         @media (max-width: 768px) {
             .essay-card, .essay-card:nth-child(even) { grid-template-columns: 1fr; gap: 30px; }
             .card-image-wrapper { order: 1 !important; }
+            .home-patron-card { padding: 40px 20px; }
         }
     </style>
 </head>
@@ -211,35 +228,35 @@ const subtitle = "She's got a lot to say before going to hell";
     </main>
 
     <section class="home-newsletter-box">
-  <div class="newsletter-wrapper">
-    <h2>NEWSLETTER</h2>
-    <div class="newsletter-desc">
-      <span class="en">Digital Field Observations & Literary Space</span>
-    </div>
-    <form class="email-form">
-      <input type="email" placeholder="EMAIL ADDRESS" required />
-      <button type="submit">
-        <span class="cn">订阅</span>
-        <span class="en">(Subscribe)</span>
-      </button>
-    </form>
-    <p class="free-sub-notice">免费订阅 (Free Subscription)</p>
-  </div>
-</section>
+        <div class="newsletter-wrapper">
+            <h2>NEWSLETTER</h2>
+            <div class="newsletter-desc">
+                <span class="en">Digital Field Observations & Literary Space</span>
+            </div>
+            <form class="email-form">
+                <input type="email" placeholder="EMAIL ADDRESS" required />
+                <button type="submit">
+                    <span class="cn">订阅</span>
+                    <span class="en">(Subscribe)</span>
+                </button>
+            </form>
+            <p class="free-sub-notice">免费订阅 (Free Subscription)</p>
+        </div>
+    </section>
 
-<section class="home-patron-section">
-  <div class="home-patron-card">
-    <h3>支持Rui的写作</h3>
-    <span class="en-sub">Support Rui's Writing</span>
-    <div class="patron-text">
-      <p>如果你喜欢我写的东西，欢迎请我喝罐红牛。</p>
-      <p style="font-size: 13px; opacity: 0.5; margin-top: 8px;">
-        If you enjoy my writings, feel free to buy me a Red Bull.
-      </p>
-    </div>
-    <a href="#" class="redbull-btn">SPONSOR A RED BULL</a>
-  </div>
-</section>
+    <section class="home-patron-section">
+        <div class="home-patron-card">
+            <h3>支持Rui的写作</h3>
+            <span class="en-sub">Support Rui's Writing</span>
+            <div class="patron-text">
+                <p>如果你喜欢我写的东西，欢迎请我喝罐红牛。</p>
+                <p style="font-size: 13px; opacity: 0.5; margin-top: 8px;">
+                    If you enjoy my writings, feel free to buy me a Red Bull.
+                </p>
+            </div>
+            <a href="#" class="redbull-btn">SPONSOR A RED BULL</a>
+        </div>
+    </section>
 
     <footer>EST. 2026 / RUI & RUIBEET ARCHIVE</footer>
 
