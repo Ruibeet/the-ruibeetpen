@@ -229,6 +229,78 @@ const subtitle = "She's got a lot to say before going to hell";
             <a href="/field" class="nav-item" style="background-color: #F3DE16; color: black !important;">
                 <span class="cn">田野</span><span class="en">Field</span>
             </a>
+</a>
+  
+  <div class="dropdown-content">
+    <a href="/field/100-people" class="dropdown-link">
+      <span class="cn">100人</span><span class="en">100 People</span>
+    </a>
+    <a href="/field/roots" class="dropdown-link">
+      <span class="cn">根</span><span class="en">Roots</span>
+    </a>
+    <a href="/field/mountains" class="dropdown-link">
+      <span class="cn">山</span><span class="en">Mountains</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  /* 基础布局：让导航项和下拉框相对定位 */
+  .nav-group {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* 下拉框样式：默认隐藏，工整的黑框黄底 */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%; /* 紧贴导航栏下方 */
+    left: 0;
+    background-color: #F3DE16; /* 沿用田野的明黄色 */
+    border: 2px solid black;
+    min-width: 160px;
+    z-index: 100;
+    box-shadow: 6px 6px 0px black; /* 延续首页的阴影美学 */
+  }
+
+  /* 悬浮显示 */
+  .nav-group:hover .dropdown-content {
+    display: block;
+  }
+
+  /* 下拉链接样式 */
+  .dropdown-link {
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: black;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .dropdown-link:last-child { border-bottom: none; }
+
+  .dropdown-link:hover {
+    background-color: black;
+    color: #F3DE16 !important;
+  }
+
+  /* 中英文排版 */
+  .dropdown-link .en {
+    display: block;
+    font-size: 10px;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  
+  .dropdown-link .cn {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+  }
+</style>
         </div>
     </nav>
 
