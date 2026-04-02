@@ -46,7 +46,7 @@ const sizes = ['large', 'small', 'medium'];
         .short-card {
             background: white;
             border: 2.5px solid black;
-            padding: 20px;
+            padding: 15px;
             text-decoration: none;
             color: black;
             box-shadow: 8px 8px 0px black;
@@ -55,9 +55,9 @@ const sizes = ['large', 'small', 'medium'];
             flex-direction: column;
         }
 
-        .short-card.large { grid-row: span 28; }
-        .short-card.medium { grid-row: span 22; }
-        .short-card.small { grid-row: span 24; }
+        .short-card.large { grid-row: span 20; }
+        .short-card.medium { grid-row: span 16; }
+        .short-card.small { grid-row: span 18; }
 
         .short-card:hover { 
             transform: translate(-4px, -4px); 
@@ -68,20 +68,36 @@ const sizes = ['large', 'small', 'medium'];
         
         .short-image-wrapper {
             width: 100%;
-            height: 180px;
+            height: 150px;
             overflow: hidden;
             border: 1px solid black;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             background: #eee;
         }
         
-        .short-image { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s; }
-        .short-card:hover .short-image { filter: grayscale(0%); transform: scale(1.05); }
-
         .short-title { font-family: 'ZCOOL XiaoWei'; font-size: 22px; margin-bottom: 5px; color: black; }
         .short-en { font-family: 'Cinzel'; font-size: 9px; letter-spacing: 1px; opacity: 0.5; margin-bottom: 15px; display: block; }
-        .short-desc { font-size: 13px; line-height: 1.7; opacity: 0.8; }
+        
+        /* 1. 修改后的描述文字：限制 3 行并缩减行高 */
+        .short-desc { 
+            font-size: 13px; 
+            line-height: 1.5; 
+            opacity: 0.8; 
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
+        /* 2. 确保内容向上对齐，不留无用间隙 */
+        .short-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        /* 3. 移动端适配（通常放在样式表的最后） */
         @media (max-width: 768px) {
             .shorts-grid { display: flex; flex-direction: column; }
             .short-card { margin-bottom: 30px; }
