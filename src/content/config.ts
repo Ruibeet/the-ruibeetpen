@@ -7,12 +7,22 @@ const essays = defineCollection({
     date: z.coerce.date(),
     description: z.string(),
     category: z.string(),
-    // ✨ 修复：使用 image() 来告诉 Astro 这是一个本地图片文件
     image: image().optional(), 
   }),
 });
 
-// 其他 collection 保持不变，但建议也把 image 字段改成 image().optional()
+// ✨ 新增：定义 novel 集合
+const novel = defineCollection({
+  type: 'content',
+  schema: ({ image }) => z.object({
+    title: z.string(),
+    date: z.union([z.string(), z.number(), z.date()]), // 兼容你写的 2021 数字格式
+    description: z.string(),
+    category: z.string(),
+    image: image().optional(),
+  }),
+});
+
 const field = defineCollection({
   type: 'content',
   schema: ({ image }) => z.object({
@@ -38,6 +48,7 @@ const life = defineCollection({
 
 export const collections = { 
   'essays': essays,
+  'novel': novel, // ✨ 必须在这里注册
   'field': field,
   'life': life 
 };
