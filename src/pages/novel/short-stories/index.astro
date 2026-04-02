@@ -71,33 +71,28 @@ const sizes = ['large', 'small', 'medium'];
             height: 180px;
             overflow: hidden;
             border: 1px solid black;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             background: #eee;
         }
         
         .short-title { font-family: 'ZCOOL XiaoWei'; font-size: 22px; margin-bottom: 5px; color: black; }
         .short-en { font-family: 'Cinzel'; font-size: 9px; letter-spacing: 1px; opacity: 0.5; margin-bottom: 15px; display: block; }
-        
-        /* 1. 修改后的描述文字：限制 3 行并缩减行高 */
-        .short-desc { 
-            font-size: 13px; 
-            line-height: 1.5; 
-            opacity: 0.8; 
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* 2. 确保内容向上对齐，不留无用间隙 */
-        .short-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        /* 3. 移动端适配（通常放在样式表的最后） */
+        .short-desc {
+    font-size: 13px;
+    line-height: 1.5; /* 稍微调紧行高 */
+    opacity: 0.8;
+    /* ✨ 新增：超过 3 行自动显示省略号，防止撑开卡片 */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+       .short-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 确保内容靠上，而不是撑开间距 */
+}
         @media (max-width: 768px) {
             .shorts-grid { display: flex; flex-direction: column; }
             .short-card { margin-bottom: 30px; }
