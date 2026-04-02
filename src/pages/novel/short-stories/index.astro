@@ -5,15 +5,12 @@ import { Image } from 'astro:assets';
 const title = "Short Stories";
 const subtitle = "Fragments, Flashes, and Fictions";
 
-// 1. 直接获取，不做任何过滤
+// 1. 获取内容 (不做任何过滤，确保能抓到)
 const shorts = await getCollection('novel');
-
-// 2. 这里的 console.log 会在 Vercel 的 Build Logs 或者你本地的终端显示
-// 如果它是 0，说明 Astro 根本没看到你的文件夹
-console.log("找到的文章总数:", shorts.length); 
 
 const sizes = ['large', 'small', 'medium'];
 ---
+
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
@@ -22,7 +19,7 @@ const sizes = ['large', 'small', 'medium'];
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg-color: #0A9C49; /* 森林绿背景 */
+            --bg-color: #0A9C49; 
             --border-color: #000000; 
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,12 +32,10 @@ const sizes = ['large', 'small', 'medium'];
 
         .container { max-width: 1200px; margin: 0 auto; padding: 60px 40px; }
 
-        /* 1. Header */
         .page-header { margin-bottom: 80px; text-align: left; }
         .page-header h1 { font-family: 'Playfair Display'; font-size: clamp(40px, 8vw, 70px); margin-bottom: 10px; color: white; }
         .page-header p { font-family: 'Cinzel'; letter-spacing: 4px; opacity: 0.7; font-size: 12px; }
 
-        /* 2. 错落格布局 */
         .shorts-grid { 
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -60,11 +55,79 @@ const sizes = ['large', 'small', 'medium'];
             flex-direction: column;
         }
 
-        /* 自动分配的高度跨度 */
-        .short-card.large { grid-row: span 25; }
-        .short-card.medium { grid-row: span 20; }
-        .short-card.small { grid-row: span 22; }
+        .short-card.large { grid-row: span 28; }
+        .short-card.medium { grid-row: span 22; }
+        .short-card.small { grid-row: span 24; }
 
         .short-card:hover { 
             transform: translate(-4px, -4px); 
-            box-shadow:
+            box-shadow: 12px 12px 0px rgba(0,0,0,0.3);
+        }
+
+        .short-date { font-family: 'Cinzel'; font-size: 10px; opacity: 0.4; margin-bottom: 15px; }
+        
+        .short-image-wrapper {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            border: 1px solid black;
+            margin-bottom: 20px;
+            background: #eee;
+        }
+        
+        .short-image { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s; }
+        .short-card:hover .short-image { filter: grayscale(0%); transform: scale(1.05); }
+
+        .short-title { font-family: 'ZCOOL XiaoWei'; font-size: 22px; margin-bottom: 5px; color: black; }
+        .short-en { font-family: 'Cinzel'; font-size: 9px; letter-spacing: 1px; opacity: 0.5; margin-bottom: 15px; display: block; }
+        .short-desc { font-size: 13px; line-height: 1.7; opacity: 0.8; }
+
+        @media (max-width: 768px) {
+            .shorts-grid { display: flex; flex-direction: column; }
+            .short-card { margin-bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>{title}</h1>
+            <p>{subtitle}</p>
+        </header>
+
+        <main class="shorts-grid">
+            {shorts.map((item, index) => {
+                const size = sizes[index % sizes.length];
+                return (
+                    /* 注意：这里链接暂设为 # 因为你还没做详情页 */
+                    <a href="#" class={`short-card ${size}`}>
+                        <div class="short-date">{item.data.date}</div>
+                        <div class="short-image-wrapper">
+                            {item.data.image && (
+                                <Image 
+                                    src={item.data.image} 
+                                    alt={item.data.title} 
+                                    class="short-image"
+                                    width={600}
+                                    height={800}
+                                />
+                            )}
+                        </div>
+                        <div class="short-content">
+                            <h2 class="short-title">{item.data.title}</h2>
+                            <span class="short-en">NOVEL / {item.data.category}</span>
+                            <p class="short-desc">{item.data.description}</p>
+                        </div>
+                    </a>
+                );
+            })}
+        </main>
+        
+        <footer style="margin-top: 100px; text-align: center; opacity: 0.6; font-family: 'Cinzel'; font-size: 10px;">
+            <p>END OF ARCHIVE / RUI & RUIBEET</p>
+        </footer>
+    </div>
+
+</body>
+</html>
