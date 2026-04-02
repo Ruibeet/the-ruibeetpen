@@ -319,8 +319,20 @@ const subtitle = "She's got a lot to say before going to hell";
             {latestEssays.map((essay) => (
                 <a href={`/essays/${essay.slug}`} class="essay-card">
                     <div class="card-image-wrapper">
-                        <img src={essay.data.image || 'https://via.placeholder.com/800x600'} alt={essay.data.title} class="card-image" />
-                    </div>
+  {
+    essay.data.image ? (
+      <img 
+        src={essay.data.image.startsWith('./') 
+          ? `/src/content/essays/${essay.data.image.replace('./', '')}` 
+          : essay.data.image} 
+        alt={essay.data.title} 
+        class="card-image" 
+      />
+    ) : (
+      <img src="https://via.placeholder.com/800x600" alt="Placeholder" class="card-image" />
+    )
+  }
+</div>
                     <div class="card-text-content">
                         <div>
                             <h2 class="essay-title">{essay.data.title}</h2>
