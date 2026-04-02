@@ -3,7 +3,7 @@ title: "童年的最后一个夏天"
 date: 2022-05
 description: "我无尽的假日结束了，夏天的炎热结束了，我的童年在2008年6月1日，正式结束了，之后便找不回来了。"
 category: "Short Story"
-image: "./earthquake.jpg" 
+image: "./earthquake.jpeg" 
 ---
 
 那天我是被蝉鸣声叫醒的，"不知——不知——"，夏天一晃眼就到了。
