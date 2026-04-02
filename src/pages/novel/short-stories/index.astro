@@ -5,26 +5,15 @@ import { Image } from 'astro:assets';
 const title = "Short Stories";
 const subtitle = "Fragments, Flashes, and Fictions";
 
-// 1. 获取所有 novel 集合里的内容
-const allNovels = await getCollection('novel');
+// 1. 直接获取，不做任何过滤
+const shorts = await getCollection('novel');
 
-// 2. 超强兼容过滤逻辑
-const shorts = allNovels.filter(item => {
-    // 只要 category 里包含 "Short" 这个词（不分大小写）就过关
-    const cat = item.data.category ? String(item.data.category).toLowerCase() : "";
-    return cat.includes("short");
-});
-
-// 3. 兼容排序（防止 2021 这种数字导致代码崩溃）
-shorts.sort((a, b) => {
-    const dateA = parseInt(String(a.data.date)) || 0;
-    const dateB = parseInt(String(b.data.date)) || 0;
-    return dateB - dateA;
-});
+// 2. 这里的 console.log 会在 Vercel 的 Build Logs 或者你本地的终端显示
+// 如果它是 0，说明 Astro 根本没看到你的文件夹
+console.log("找到的文章总数:", shorts.length); 
 
 const sizes = ['large', 'small', 'medium'];
 ---
-
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
