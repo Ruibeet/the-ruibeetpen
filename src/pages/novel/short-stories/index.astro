@@ -1,23 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets'; // 引入核心图片组件
+import { Image } from 'astro:assets';
 
 const title = "Short Stories";
 const subtitle = "Fragments, Flashes, and Fictions";
 
-// ✨ 核心修复：从 novel 集合中获取所有文章
+// 1. 获取内容
 const allNovels = await getCollection('novel');
 
-// 过滤出类别为 Short Story 的文章，并按日期排序
+// 2. 排序与过滤
 const shorts = allNovels
     .filter(item => item.data.category === "Short Story")
     .sort((a, b) => {
-        const dateA = a.data.date ? new Date(a.data.date) : new Date(0);
-        const dateB = b.data.date ? new Date(b.data.date) : new Date(0);
-        return dateB.getTime() - dateA.getTime();
+        // 兼容数字年份和标准日期
+        const dateA = parseInt(String(a.data.date));
+        const dateB = parseInt(String(b.data.date));
+        return dateB - dateA;
     });
 
-// 尺寸分配逻辑：循环分配 large, small, medium 以保持错落感
 const sizes = ['large', 'small', 'medium'];
 ---
 
