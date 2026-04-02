@@ -1,148 +1,187 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets'; // ✨ 引入 Astro 官方图片组件
+import { Image } from 'astro:assets'; // 确保引入图片组件
 
-export async function getStaticPaths() {
-  const essays = await getCollection('essays');
-  return essays.map(entry => ({ 
-    params: { slug: entry.slug }, 
-    props: { entry } 
-  }));
-}
+const allEssays = await getCollection('essays').catch(() => []);
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
+// 按日期排序并取前三篇
+const latestEssays = [...allEssays]
+  .sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date) : new Date(0);
+    const dateB = b.data.date ? new Date(b.data.date) : new Date(0);
+    return dateB.getTime() - dateA.getTime();
+  })
+  .slice(0, 3);
+
+const title = "Rui & Ruibeet";
+const subtitle = "She's got a lot to say before going to hell";
 ---
 
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{entry.data.title}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Noto+Serif+SC:wght@300;500&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
-    /* 全局背景与基础设置 */
-    body { background-color: #DF9225; color: white; margin: 0; font-family: 'Noto Serif SC', serif; }
-    
-    /* 文章容器 */
-    main { 
-        max-width: 750px; 
-        margin: 0 auto; 
-        background: white; 
-        color: #1a1a1a; 
-        padding: 80px 40px; 
-        min-height: 100vh; 
-        border-left: 2px solid black; 
-        border-right: 2px solid black;
-        box-sizing: border-box;
-        overflow-wrap: break-word;
-    }
+        :root { --bg-color: #A7C9D4; --border-color: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Serif SC', serif; background-color: var(--bg-color); color: #1a1a1a; line-height: 1.6; overflow-x: hidden; }
 
-    .back-nav { margin-bottom: 40px; font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 0.2em; }
-    .back-nav a { color: #1a1a1a; text-decoration: none; border-bottom: 1px solid black; }
+        /* --- Header --- */
+        header.home-header { padding: 80px 20px 50px; text-align: center; }
+        .main-title { font-family: 'Playfair Display', serif; font-size: clamp(40px, 8vw, 80px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.0; }
+        .subtitle { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; opacity: 0.6; margin-top: 25px; }
 
-    h1 { font-family: 'ZCOOL XiaoWei', serif; font-size: clamp(32px, 5vw, 56px); text-align: center; margin-bottom: 40px; line-height: 1.2; color: black; }
+        /* --- Navigation (带回下拉菜单逻辑) --- */
+        nav.home-nav { position: sticky; top: 0; z-index: 100; padding: 15px 30px; background: rgba(167, 201, 212, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .home-nav-container { display: flex; max-width: 1100px; margin: 0 auto; border: 2px solid var(--border-color); box-shadow: 5px 5px 0px var(--border-color); background: white; }
+        
+        .home-nav-item { flex: 1; position: relative; padding: 10px 5px; text-align: center; text-decoration: none; color: white !important; border-right: 2px solid var(--border-color); transition: all 0.3s ease; display: flex; flex-direction: column; gap: 2px; }
+        .home-nav-item:last-child { border-right: none; }
+        .home-nav-item .cn { font-family: 'ZCOOL XiaoWei', serif; font-size: 14px; color: inherit; }
+        .home-nav-item .en { font-family: 'Cinzel', serif; font-size: 8px; opacity: 0.9; letter-spacing: 1px; color: inherit; }
+        
+        .home-nav-item:hover { background-color: white !important; }
+        .home-nav-item:hover .cn, .home-nav-item:hover .en { color: black !important; }
 
-    .content { font-size: 18px; line-height: 2.1; text-align: justify; }
-    .content :global(p) { margin-bottom: 2.2em; }
+        /* 下拉菜单样式 */
+        .dropdown-content { display: none; position: absolute; top: 100%; left: -2px; width: calc(100% + 4px); border: 2px solid var(--border-color); box-shadow: 5px 5px 0px var(--border-color); z-index: 1000; }
+        .home-nav-item:hover .dropdown-content { display: block; }
+        .dropdown-link { display: block; padding: 12px 10px; text-decoration: none; color: white !important; border-bottom: 2px solid var(--border-color); transition: 0.2s; text-align: center; }
+        .dropdown-link:last-child { border-bottom: none; }
+        .dropdown-link:hover { background-color: white !important; }
+        .dropdown-link:hover .cn, .dropdown-link:hover .en { color: black !important; }
 
-    /* --- 封面图样式 --- */
-    .main-cover-wrapper {
-        width: 100%;
-        margin: 0 auto 60px auto;
-        box-sizing: border-box;
-    }
+        /* --- Content Grid --- */
+        .content-grid-wrapper { max-width: 1200px; margin: 60px auto 100px; padding: 0 30px; }
+        .compact-essay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .essay-card { display: flex; flex-direction: column; background: white; border: 2px solid var(--border-color); box-shadow: 8px 8px 0px var(--border-color); text-decoration: none; color: black; transition: 0.3s ease; overflow: hidden; height: 100%; }
+        .essay-card:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0px var(--border-color); }
+        
+        .card-image-wrapper { width: 100%; height: 220px; border-bottom: 2px solid black; overflow: hidden; background: #f0f0f0; }
+        .card-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .essay-card:hover .card-image { transform: scale(1.05); }
 
-    .main-cover-img {
-        display: block;
-        width: 100% !important;
-        height: auto !important;
-        border: 2px solid black;
-        box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
-        box-sizing: border-box;
-    }
+        .card-text-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .essay-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+        .essay-desc { font-size: 14px; opacity: 0.7; color: #333; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-meta { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px; opacity: 0.4; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); }
 
-    /* --- 正文内部图片约束 --- */
-    .content :global(img) {
-        display: block !important;
-        max-width: 100% !important; 
-        height: auto !important;
-        margin: 3.5rem auto !important;
-        border: 1.5px solid black !important;
-        padding: 8px !important;
-        background: #fcfcfc !important;
-        box-sizing: border-box !important;
-    }
+        /* --- Buttons & Sections --- */
+        .view-all-wrapper { text-align: center; margin: -20px 0 100px; }
+        .view-all-btn { display: inline-block; padding: 15px 40px; border: 2px solid black; background: white; color: black; text-decoration: none; font-family: 'Cinzel', serif; font-weight: 700; font-size: 13px; letter-spacing: 3px; box-shadow: 6px 6px 0px black; }
 
-    /* 小标题与图注样式 */
-    .content :global(h3) {
-        font-family: 'ZCOOL XiaoWei', serif;
-        font-size: 26px;
-        margin: 4rem 0 1.5rem 0;
-        border-bottom: 1.5px solid black;
-        display: inline-block;
-        padding-bottom: 5px;
-    }
+        .home-newsletter-box { max-width: 900px; margin: 0 auto 100px; background: #EEC43E; border: 3px solid black; padding: 60px 40px; text-align: center; box-shadow: 15px 15px 0px black; }
+        .home-newsletter-box h2 { font-family: 'Cinzel', serif; font-size: clamp(36px, 6vw, 56px); margin-bottom: 20px; letter-spacing: 10px; font-weight: 700; color: black; }
+        .email-form { display: flex; justify-content: center; max-width: 500px; margin: 0 auto; gap: 0; }
+        .email-form input { flex: 1; padding: 12px; border: 2px solid black; border-right: none; outline: none; }
+        .email-form button { background: black; color: white; padding: 0 30px; border: 2px solid black; cursor: pointer; font-family: 'ZCOOL XiaoWei', serif; }
 
-    .content :global(p > em) {
-        display: block !important;
-        text-align: center !important;
-        font-size: 14px !important;
-        color: #666 !important;
-        margin-top: -2.5rem !important; 
-        margin-bottom: 4rem !important;
-        font-family: 'Noto Serif SC', serif;
-    }
+        .home-patron-section { padding-bottom: 100px; text-align: center; }
+        .home-patron-card { display: inline-block; background: white; border: 2.5px solid black; padding: 50px 60px; box-shadow: 12px 12px 0px #0A9C49; max-width: 650px; }
+        .redbull-btn { display: inline-block; background: black; color: white; padding: 18px 40px; margin-top: 35px; text-decoration: none; font-family: 'Cinzel', serif; font-weight: 700; font-size: 12px; }
 
-    #waline { margin-top: 100px; padding-top: 50px; border-top: 1px solid #eee; color: #1a1a1a; }
-</style>
+        footer { padding: 80px 0; text-align: center; opacity: 0.3; font-size: 9px; letter-spacing: 0.5em; }
+
+        @media (max-width: 900px) {
+            .compact-essay-grid { grid-template-columns: 1fr; }
+            .essay-card { max-width: 450px; margin: 0 auto; }
+        }
+    </style>
 </head>
 <body>
-    <main>
-        <nav class="back-nav">
-            <a href="/essays">← BACK TO MANUSCRIPTS</a>
-        </nav>
 
-        <div style="text-align: center; text-transform: uppercase; letter-spacing: 0.4em; margin-bottom: 20px; opacity: 0.5; font-size: 10px;">
-            {entry.data.category} / {entry.data.date?.toLocaleDateString('zh-CN')}
-        </div>
+    <header class="home-header">
+        <h1 class="main-title">{title}</h1>
+        <p class="subtitle">{subtitle}</p>
+    </header>
 
-        <h1>{entry.data.title}</h1>
-
-        {/* ✨ 修复：使用 Astro 的 Image 组件渲染封面图 */}
-        {entry.data.image && (
-            <div class="main-cover-wrapper">
-                <Image 
-                    src={entry.data.image} 
-                    alt={entry.data.title} 
-                    class="main-cover-img"
-                    width={1200}
-                    height={800}
-                />
+    <nav class="home-nav">
+        <div class="home-nav-container">
+            <a href="/" class="home-nav-item" style="background-color: #000000;">
+                <span class="cn">首页</span><span class="en">Home</span>
+            </a>
+            
+            <div class="home-nav-item" style="background-color: #0A9C49;">
+                <span class="cn">小说</span><span class="en">Fiction</span>
+                <div class="dropdown-content" style="background-color: #0A9C49;">
+                    <a href="/novel/long-form" class="dropdown-link"><span class="cn">中长篇</span><span class="en">Novels</span></a>
+                    <a href="/novel/short-stories" class="dropdown-link"><span class="cn">短篇小说</span><span class="en">Short Stories</span></a>
+                </div>
             </div>
-        )}
 
-        <div class="content">
-            <Content />
+            <a href="/essays" class="home-nav-item" style="background-color: #DF9225;">
+                <span class="cn">杂文</span><span class="en">Blogs</span>
+            </a>
+
+            <a href="/life" class="home-nav-item" style="background-color: #EEC43E; color: black !important;">
+                <span class="cn">生活</span><span class="en">Life</span>
+            </a>
+
+            <div class="home-nav-item" style="background-color: #F3DE16; color: black !important;">
+                <span class="cn">田野</span><span class="en">Field</span>
+                <div class="dropdown-content" style="background-color: #F3DE16;">
+                    <a href="/field/100-people" class="dropdown-link" style="color: black !important;"><span class="cn">100人</span><span class="en">100 People</span></a>
+                    <a href="/field/roots" class="dropdown-link" style="color: black !important;"><span class="cn">根</span><span class="en">Roots</span></a>
+                    <a href="/field/mountains" class="dropdown-link" style="color: black !important;"><span class="cn">山</span><span class="en">Mountains</span></a>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <div id="waline"></div>
+    <main class="content-grid-wrapper">
+        <div class="compact-essay-grid">
+            {latestEssays.map((essay) => (
+                <a href={`/essays/${essay.slug}`} class="essay-card">
+                    <div class="card-image-wrapper">
+                        {essay.data.image ? (
+                            <Image 
+                                src={essay.data.image} 
+                                alt={essay.data.title} 
+                                class="card-image"
+                                width={800}
+                                height={600}
+                            />
+                        ) : (
+                            <div style="background:#eee; height:100%; display:flex; align-items:center; justify-content:center; font-size:10px; opacity:0.3;">RUI ARCHIVE</div>
+                        )}
+                    </div>
+                    <div class="card-text-content">
+                        <div>
+                            <h2 class="essay-title">{essay.data.title}</h2>
+                            <p class="essay-desc">{essay.data.description}</p>
+                        </div>
+                        <small class="card-meta">
+                            {essay.data.date ? new Date(essay.data.date).getFullYear() : '2026'} // {essay.data.category}
+                        </small>
+                    </div>
+                </a>
+            ))}
+        </div>
     </main>
 
-    <script>
-        // Waline 评论初始化逻辑保持不变
-        import { init } from 'https://unpkg.com/@waline/client@v2/dist/waline.mjs';
-        import 'https://unpkg.com/@waline/client@v2/dist/waline.css';
-        
-        const walineElement = document.getElementById('waline');
-        if (walineElement) {
-            init({
-                el: '#waline',
-                serverURL: 'https://your-waline-server.vercel.app', 
-                lang: 'zh-CN',
-                dark: false,
-            });
-        }
-    </script>
+    <div class="view-all-wrapper">
+        <a href="/essays" class="view-all-btn">VIEW ALL ARCHIVE</a>
+    </div>
+
+    <section class="home-newsletter-box">
+        <h2>NEWSLETTER</h2>
+        <form class="email-form">
+            <input type="email" placeholder="EMAIL ADDRESS" required />
+            <button type="submit">订阅</button>
+        </form>
+    </section>
+
+    <section class="home-patron-section">
+        <div class="home-patron-card">
+            <h3 style="font-family: 'ZCOOL XiaoWei', serif; font-size: 24px; margin-bottom: 15px;">支持Rui的写作</h3>
+            <p>如果你喜欢我写的东西，欢迎请我喝罐红牛。</p>
+            <a href="#" class="redbull-btn">SPONSOR A RED BULL</a>
+        </div>
+    </section>
+
+    <footer>EST. 2026 / RUI & RUIBEET ARCHIVE</footer>
+
 </body>
 </html>
