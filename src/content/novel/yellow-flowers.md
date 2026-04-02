@@ -3,7 +3,7 @@ title: "色尔君木美多"
 date: 2021
 description: "男人在山下拥有大片宅基地，拥有走出盆地的路，拥有活着的希望，女人为什么不能在山上放火，歌唱，立新神？"
 category: "Short Story"
-image: "./covers/yellow-flowers.jpg" 
+image: "./yellow-flowers.jpg" 
 ---
 
 这里开始写你的小说正文...
