@@ -1,6 +1,5 @@
 ---
-title: "春日碎片"
-date: "2026-03-24"
-image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23" # 填入你的图片地址
+title: "我的第一篇生活随笔" (或者你原本的标题)
+date: 2026-03-01
+location: "家里"
 ---
-今天在路边看到的风景。
