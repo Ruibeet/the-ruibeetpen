@@ -1,18 +1,16 @@
 import { defineCollection, z } from 'astro:content';
 
-// 1. 定义“杂文 (Essays)”集合
 const essays = defineCollection({
   type: 'content',
   schema: ({ image }) => z.object({
     title: z.string(),
-    date: z.coerce.date(), // 删除了多余的 z.any()，只保留这一个
+    date: z.coerce.date(),
     description: z.string(),
     category: z.string(),
-    image: image(), // 删除了重复的这一行
+    image: image(),
   }),
 });
 
-// 2. 定义“田野 (Field)”集合
 const field = defineCollection({
   type: 'content',
   schema: ({ image }) => z.object({
@@ -26,7 +24,6 @@ const field = defineCollection({
   }),
 });
 
-// 3. 定义“生活 (Life)”集合
 const life = defineCollection({
   type: 'content',
   schema: ({ image }) => z.object({
@@ -37,7 +34,6 @@ const life = defineCollection({
   }),
 });
 
-// 4. 统一导出（这里一定要写完整）
 export const collections = { 
   'essays': essays,
   'field': field,
