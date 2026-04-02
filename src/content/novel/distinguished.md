@@ -3,7 +3,7 @@ title: "夫子"
 date: 2024
 description: "我一个字没听进去，目光落在地上那本七年前的《西南角》上，封面的角落里，一排小小的宋体字闪闪发光：新生力量——《夫子》阿尤。"
 category: "Short Story"
-image: "./distinguished.jpg" 
+image: "./distinguished.webp" 
 ---
 
 ### 2023年6月11日 
