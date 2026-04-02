@@ -101,7 +101,7 @@ const sizes = ['large', 'small', 'medium'];
                 const size = sizes[index % sizes.length];
                 return (
                     /* 注意：这里链接暂设为 # 因为你还没做详情页 */
-                    <a href="#" class={`short-card ${size}`}>
+                    <a href={`/novel/${item.slug}`} class={`short-card ${size}`}>
                         <div class="short-date">{item.data.date}</div>
                         <div class="short-image-wrapper">
                             {item.data.image && (
