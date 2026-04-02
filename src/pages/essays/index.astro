@@ -20,8 +20,30 @@ const sortedEssays = allEssays.sort((a, b) => {
     <style>
         /* 页面背景与基础设置 */
         body { background-color: #DF9225; color: black; margin: 0; font-family: 'Noto Serif SC', serif; }
-        
-        header { padding: 80px 20px 40px; text-align: center; }
+        /* ✨ 新增：返回按钮样式 */
+        .back-home {
+            margin-bottom: 40px; /* 距离标题的间距 */
+            display: flex;
+            justify-content: center; /* 居中对齐，符合你杂文页的风格 */
+        }
+        .back-home a {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            text-decoration: none;
+            color: black;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+        .back-home a:hover {
+            opacity: 1;
+            transform: translateX(-5px);
+            /* 悬停时稍微变白一点，在橘色背景上很显眼 */
+            color: white; 
+        }
+        header { padding: 60px 20px 40px; text-align: center; }
         h1 { font-family: 'ZCOOL XiaoWei', serif; font-size: clamp(40px, 8vw, 64px); margin: 0; letter-spacing: 0.1em; }
         
         /* 按照你的要求改为 BLOGS */
@@ -72,6 +94,9 @@ const sortedEssays = allEssays.sort((a, b) => {
 <body>
 
     <header>
+        <nav class="back-home">
+            <a href="/">← HOME</a>
+        </nav>
         <h1>杂文集</h1>
         <p class="subtitle">BLOGS</p>
     </header>
