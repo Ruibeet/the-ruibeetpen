@@ -1,0 +1,127 @@
+---
+import { getCollection } from 'astro:content';
+
+// 1. 核心逻辑：获取 Markdown 列表并生成路径
+export async function getStaticPaths() {
+  const allChapters = await getCollection('novel');
+  
+  // 过滤出路径中包含 'golden-boy' 的内容
+  const filteredChapters = allChapters.filter(entry => 
+    entry.id.startsWith('golden-boy/')
+  );
+
+  return filteredChapters.map(entry => ({
+    // 把文件名（比如 chapter-1）作为网址的一部分
+    params: { slug: entry.slug.split('/').pop() }, 
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{entry.data.title} | 天生我材：金</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=ZCOOL+XiaoWei&family=Cinzel&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0A9C49;
+            --paper-color: #ffffff;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+
+        /* 顶部极简导航 */
+        .reader-nav {
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 156, 73, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+        .reader-nav a { color: white; text-decoration: none; opacity: 0.6; }
+
+        /* 纸质感容器 */
+        .paper {
+            max-width: 850px;
+            width: 90%;
+            background-color: var(--paper-color);
+            margin: 40px 0 100px;
+            padding: 100px 80px;
+            border: 2px solid black;
+            box-shadow: 20px 20px 0px rgba(0,0,0,0.3);
+        }
+
+        h1 { 
+            font-family: 'ZCOOL XiaoWei', serif; 
+            font-size: 42px; 
+            text-align: center; 
+            margin-bottom: 80px; 
+            color: black; 
+        }
+
+        /* Markdown 正文样式 */
+        .prose {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 18px;
+            line-height: 2.2;
+            color: #1a1a1a;
+        }
+
+        /* 自动处理 Markdown 里的段落 */
+        .prose :global(p) { 
+            margin-bottom: 2em; 
+            text-indent: 2em; 
+            text-align: justify; 
+        }
+
+        .end-mark { 
+            text-align: center; 
+            margin-top: 100px; 
+            opacity: 0.1; 
+            font-family: 'Cinzel';
+            letter-spacing: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .paper { padding: 60px 25px; }
+            h1 { font-size: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="reader-nav">
+        <a href="/novel/long-form/golden-boy">← CONTENTS</a>
+        <a href="/">HOME</a>
+    </nav>
+
+    <main class="paper">
+        <h1>{entry.data.title}</h1>
+        
+        <article class="prose">
+            <Content /> </article>
+
+        <div class="end-mark">FIN</div>
+    </main>
+
+</body>
+</html>
