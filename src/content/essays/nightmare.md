@@ -2,7 +2,7 @@
 title: "剖开特定的噩梦"
 date: 2025-09-23
 description: "我已经很久不再想起多年前的那个夜晚。"
-category: "Thoughts"
+category: "chooselife"
 image: "./nightmare.jpg"
 ---
 
