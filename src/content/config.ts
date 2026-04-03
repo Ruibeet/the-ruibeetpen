@@ -16,10 +16,10 @@ const novel = defineCollection({
   type: 'content',
   schema: ({ image }) => z.object({
     title: z.string(),
-    date: z.union([z.string(), z.number(), z.date()]), // 兼容你写的 2021 数字格式
-    description: z.string(),
-    category: z.string(),
+    description: z.string().optional(), // 顺便也把简介设为可选
+    category: z.string().optional(),    // 类别设为可选
     image: image().optional(),
+    date: z.union([z.string(), z.number(), z.date()]).optional(), // ✨ 改为可选
   }),
 });
 
