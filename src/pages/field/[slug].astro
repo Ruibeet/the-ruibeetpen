@@ -1,28 +1,157 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
 export async function getStaticPaths() {
   const entries = await getCollection('field');
   return entries.map(entry => ({
     params: { slug: entry.slug }, props: { entry },
   }));
 }
+
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
+
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>{entry.data.title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{entry.data.title} | 百人计划</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@300;500;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    
     <style>
-        body { background-color: #F3DE16; padding: 60px 20px; line-height: 1.8; }
-        article { max-width: 700px; margin: 0 auto; background: white; padding: 40px; border: 2px solid black; box-shadow: 10px 10px 0px black; }
+        :root {
+            --theme-yellow: #F3DE16;
+            --border-color: #000000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--theme-yellow); 
+            font-family: 'Noto Serif SC', serif; 
+            color: black; 
+            line-height: 1.8;
+            padding: 40px 20px;
+        }
+
+        /* ✨ 新增：返回 100人 列表的箭头 */
+        .back-nav {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            display: block;
+        }
+        .back-nav a {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            text-decoration: none;
+            color: black;
+            letter-spacing: 2px;
+            opacity: 0.6;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+        .back-nav a:hover {
+            opacity: 1;
+            transform: translateX(-5px);
+        }
+
+        /* 文章容器：增加阴影和边框质感 */
+        article {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border: 2.5px solid var(--border-color);
+            box-shadow: 15px 15px 0px var(--border-color);
+            padding: 60px 50px;
+        }
+
+        /* 档案元数据：ID/地点/日期 */
+        .meta-header {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            opacity: 0.5;
+            text-transform: uppercase;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-family: 'ZCOOL XiaoWei', serif;
+            font-size: clamp(32px, 5vw, 48px);
+            margin-bottom: 30px;
+            line-height: 1.2;
+            letter-spacing: 2px;
+        }
+
+        /* 插图样式 */
+        .featured-image {
+            width: 100%;
+            height: auto;
+            border: 1px solid black;
+            margin-bottom: 40px;
+        }
+
+        /* 正文排版微调 */
+        .prose {
+            font-size: 17px;
+            color: #1a1a1a;
+            text-align: justify;
+        }
+
+        /* 让 Markdown 里的段落更有呼吸感 */
+        .prose :global(p) { margin-bottom: 28px; }
+        
+        /* 让 Markdown 里的三级标题变成艺术装饰线 */
+        .prose :global(h3) { 
+            font-family: 'ZCOOL XiaoWei', serif; 
+            font-size: 24px; 
+            margin: 45px 0 20px; 
+            border-left: 5px solid var(--theme-yellow);
+            padding-left: 15px;
+        }
+
+        @media (max-width: 768px) {
+            article { padding: 40px 25px; }
+            body { padding: 20px 15px; }
+        }
     </style>
 </head>
 <body>
+
+    <nav class="back-nav">
+        <a href="/field/100-people">← BACK TO 100 PEOPLE</a>
+    </nav>
+
     <article>
+        <div class="meta-header">
+            CASE NO. {entry.data.id || 'N/A'} // {entry.data.location} // {entry.data.date ? new Date(entry.data.date).toLocaleDateString('zh-CN') : ''}
+        </div>
+
         <h1>{entry.data.title}</h1>
-        <hr />
-        <Content />
+
+        {entry.data.image && (
+            <Image 
+                src={entry.data.image} 
+                alt={entry.data.title} 
+                class="featured-image"
+                width={1200}
+                height={800}
+            />
+        )}
+
+        <div class="prose">
+            <Content />
+        </div>
     </article>
+
+    <footer style="margin-top: 80px; text-align: center; font-family: 'Cinzel'; font-size: 10px; opacity: 0.3; letter-spacing: 4px; padding-bottom: 60px;">
+        THE 100 PEOPLE PROJECT / FIELD NOTES
+    </footer>
+
 </body>
 </html>
