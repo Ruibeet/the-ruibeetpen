@@ -2,7 +2,7 @@
 title: "在观看小车跑圈比赛之前..."
 date: 2026-03-07
 description: "人，你为什么要看小车跑圈"
-category: "杂文"
+category: "Reflection"
 image: "./f1-images/max.jpg"
 ---
 
