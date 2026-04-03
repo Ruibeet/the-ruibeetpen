@@ -2,7 +2,7 @@
 title: "在乡村喜宴重新想起劳动与跳舞"
 date: 2026-02-18
 description: "比起那些在流水线上被精准定义的身体，喜宴上的舞动更像是一种对大地重力的夺回。"
-category: "杂文"
+category: "FILE"
 image: "./banquet-images/banquet.jpg"
 ---
 
