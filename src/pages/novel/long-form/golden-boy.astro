@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+
+const bookInfo = {
+    title: "天生我材：金",
+    enTitle: "Golden Boy",
+    status: "第一册 · 已完结",
+    wordCount: "约 120,000 字",
+    description: "这是关于欲望、物质与自我救赎的寓言。在金色的废墟之上，个体如何通过感官的剥离去寻找那抹最纯粹的底色？",
+    chapters: [
+        { id: "01", title: "序章：熔炉", slug: "prologue" },
+        { id: "02", title: "第一章：淘金客的午夜", slug: "chapter-1" },
+        { id: "03", title: "第二章：镜中之金", slug: "chapter-2" },
+        // 之后可以继续添加
+    ]
+};
+---
+
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{bookInfo.title} | Rui Fiction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #0A9C49; color: white; font-family: 'Noto Serif SC', serif; margin: 0; }
+        
+        .back-nav { padding: 40px; }
+        .back-nav a { color: white; text-decoration: none; font-family: 'Cinzel'; font-size: 12px; opacity: 0.6; }
+        
+        .book-container { 
+            max-width: 1000px; margin: 0 auto; padding: 0 40px 100px;
+            display: grid; grid-template-columns: 350px 1fr; gap: 80px;
+        }
+
+        /* 左侧：精装封面感 */
+        .cover-side img { 
+            width: 100%; border: 2px solid black; 
+            box-shadow: 20px 20px 0px black; 
+            background: white; padding: 10px;
+        }
+
+        /* 右侧：书籍信息 */
+        .info-side h1 { font-family: 'ZCOOL XiaoWei'; font-size: 50px; margin: 0 0 10px; }
+        .en-title { font-family: 'Cinzel'; letter-spacing: 4px; opacity: 0.6; display: block; margin-bottom: 30px; }
+        
+        .book-meta { border-top: 1.5px solid rgba(255,255,255,0.2); padding: 20px 0; margin-bottom: 30px; font-size: 14px; opacity: 0.8; }
+        
+        .book-desc { line-height: 2; text-align: justify; margin-bottom: 50px; }
+
+        /* 章节目录列表 */
+        .chapter-list { list-style: none; padding: 0; }
+        .chapter-item { 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            padding: 15px 0; display: flex; align-items: baseline;
+            text-decoration: none; color: white; transition: 0.3s;
+        }
+        .chapter-item:hover { padding-left: 10px; color: #F3DE16; }
+        .chapter-no { font-family: 'Cinzel'; width: 40px; font-size: 12px; opacity: 0.5; }
+        .chapter-name { font-size: 18px; }
+
+        @media (max-width: 850px) {
+            .book-container { grid-template-columns: 1fr; }
+            .cover-side { width: 280px; margin: 0 auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="back-nav">
+        <a href="/novel/long-form">← BACK TO LIST</a>
+    </nav>
+
+    <main class="book-container">
+        <div class="cover-side">
+            <img src="/images/covers/golden-boy.png" alt="Golden Boy Cover" />
+        </div>
+
+        <div class="info-side">
+            <h1>{bookInfo.title}</h1>
+            <span class="en-title">{bookInfo.enTitle}</span>
+
+            <div class="book-meta">
+                <span>{bookInfo.status}</span> | <span>{bookInfo.wordCount}</span>
+            </div>
+
+            <p class="book-desc">{bookInfo.description}</p>
+
+            <h2 style="font-family: 'ZCOOL XiaoWei'; margin-bottom: 20px;">目录 / CONTENTS</h2>
+            <div class="chapter-list">
+                {bookInfo.chapters.map(chapter => (
+                    <a href={`/novel/long-form/golden-boy/${chapter.slug}`} class="chapter-item">
+                        <span class="chapter-no">{chapter.id}</span>
+                        <span class="chapter-name">{chapter.title}</span>
+                    </a>
+                ))}
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
