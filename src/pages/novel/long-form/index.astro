@@ -1,20 +1,20 @@
 ---
 const title = "Novellas & Novels";
-const subtitle = "The Long-form Fiction Archive";
 
-// ✨ 实装你的书籍数据
+// ✨ 这就是 myBooks：它是你的书架名单
 const myBooks = [
     { 
         title: "天生我材：金", 
         enTitle: "Golden Boy", 
-        desc: "《天生我材》系列第一册。探讨个体在时代淘金热中的异化与自处，以抽象的笔触勾勒出一场关于物质与灵魂的辩论。金，既是色彩，也是枷锁。", 
-        image: "/images/covers/golden-boy.jpg", // 建议将我为你生成的封面放在这个路径
+        desc: "老天是公平的，给了宋思今一双找金子的眼。", 
+        // 🚀 关键：路径必须从 /images 开始，不要带 public
+        image: "/images/covers/golden-boy.png", 
         link: "/novel/long-form/golden-boy" 
     },
     { 
-        title: "待续", 
+        title: "天生我材：药", 
         enTitle: "Coming Soon", 
-        desc: "长篇小说计划持续更新中。下一部作品将转向对城市空间的考古式书写...", 
+        desc: "...", 
         image: "https://via.placeholder.com/400x560?text=RUI+ARCHIVE",
         link: "#" 
     }
@@ -28,94 +28,45 @@ const myBooks = [
     <title>{title} | Rui</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --bg-color: #0A9C49; 
-            --border-color: #000000; 
-            --text-color: #ffffff; 
-        }
+        :root { --bg-color: #0A9C49; --text-color: #ffffff; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Noto Serif SC', serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            line-height: 1.6;
-        }
-
+        body { font-family: 'Noto Serif SC', serif; background-color: var(--bg-color); color: var(--text-color); }
         .section-container { max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
-
-        /* ✨ 新增：返回 HOME 箭头 */
+        
         .back-home { margin-bottom: 40px; }
-        .back-home a {
-            font-family: 'Cinzel', serif;
-            font-size: 12px;
-            text-decoration: none;
-            color: white;
-            letter-spacing: 2px;
-            opacity: 0.6;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-        }
-        .back-home a:hover { opacity: 1; transform: translateX(-5px); }
+        .back-home a { font-family: 'Cinzel'; font-size: 12px; text-decoration: none; color: white; opacity: 0.6; }
 
         .page-header { margin-bottom: 80px; border-bottom: 1.5px solid rgba(255,255,255,0.3); padding-bottom: 30px; }
-        .page-header h1 { font-family: 'Playfair Display'; font-size: clamp(40px, 8vw, 70px); color: white; }
-        .page-header span { font-family: 'ZCOOL XiaoWei'; font-size: 24px; color: white; opacity: 0.8; }
-
-        .books-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* 因为目前只有两本，改为两列更美观 */
-            gap: 60px; 
-            margin-top: 40px;
-        }
+        .page-header h1 { font-family: 'Playfair Display'; font-size: clamp(40px, 8vw, 70px); }
+        
+        .books-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px; }
         .book-card { text-decoration: none; color: white; }
         
-        /* 封面容器：白底黑框，形成你喜欢的硬核感 */
+        /* 封面容器 */
         .book-cover-wrapper {
             aspect-ratio: 1 / 1.4; 
             border: 2.5px solid black;
             background: white; 
-            padding: 15px; /* 这里形成白边，像装裱一样 */
+            padding: 15px; 
             box-shadow: 15px 15px 0px black;
-            transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+            transition: 0.5s;
             margin-bottom: 30px;
-            overflow: hidden;
         }
-        .book-card:hover .book-cover-wrapper { 
-            transform: translate(-8px, -8px); 
-            box-shadow: 25px 25px 0px rgba(0,0,0,0.5); 
-        }
-        .book-cover { width: 100%; height: 100%; object-fit: cover; }
+        .book-card:hover .book-cover-wrapper { transform: translate(-8px, -8px); box-shadow: 25px 25px 0px rgba(0,0,0,0.5); }
+        .book-cover { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; }
         
-        .book-title { font-family: 'ZCOOL XiaoWei'; font-size: 32px; margin-bottom: 8px; color: white; }
-        .book-en { font-family: 'Cinzel'; font-size: 11px; letter-spacing: 3px; opacity: 0.7; display: block; margin-bottom: 20px; color: white; }
-        .book-desc { font-size: 15px; line-height: 2; opacity: 0.9; text-align: justify; font-weight: 300; }
+        .book-title { font-family: 'ZCOOL XiaoWei'; font-size: 32px; margin-bottom: 8px; }
+        .book-en { font-family: 'Cinzel'; font-size: 11px; letter-spacing: 3px; opacity: 0.7; display: block; margin-bottom: 20px; }
+        .book-desc { font-size: 15px; line-height: 2; opacity: 0.9; text-align: justify; }
 
-        /* 更新列表与评论区样式保持不变... */
-        .updates-section { margin-top: 120px; border-top: 2.5px solid black; padding-top: 60px; }
-        .update-item { display: flex; justify-content: space-between; align-items: baseline; padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.2); text-decoration: none; color: white; transition: 0.3s; }
-        .update-item:hover { padding-left: 10px; background: rgba(255,255,255,0.05); }
-        .update-title { font-size: 19px; font-family: 'Noto Serif SC'; }
-        .update-meta { font-family: 'Cinzel'; font-size: 12px; opacity: 0.6; }
-
-        .comment-section { margin: 120px 0; background: white; border: 3px solid black; padding: 80px 40px; box-shadow: 15px 15px 0px black; color: black; }
-        .comment-title { font-family: 'Playfair Display'; font-size: 36px; margin-bottom: 40px; text-align: center; }
-        .comment-placeholder { border: 2px dashed #eee; padding: 60px; text-align: center; color: #999; font-family: 'Cinzel'; letter-spacing: 2px; font-size: 12px; }
-
-        @media (max-width: 900px) {
-            .books-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .books-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-
     <div class="section-container">
-        <nav class="back-home">
-            <a href="/">← HOME</a>
-        </nav>
-
+        <nav class="back-home"><a href="/">← HOME</a></nav>
         <header class="page-header">
-            <span>中长篇小说</span>
+            <span style="font-family: 'ZCOOL XiaoWei'; font-size: 24px;">中长篇小说</span>
             <h1>{title}</h1>
         </header>
 
@@ -131,28 +82,6 @@ const myBooks = [
                 </a>
             ))}
         </section>
-
-        <section class="updates-section">
-            <h2 style="font-family: 'ZCOOL XiaoWei'; margin-bottom: 40px; font-size: 32px;">最新更新 / UPDATES</h2>
-            <div class="updates-list">
-                <a href="#" class="update-item">
-                    <span class="update-title">《天生我材：金》正式版归档</span>
-                    <span class="update-meta">APRIL 03, 2026</span>
-                </a>
-            </div>
-        </section>
-
-        <section class="comment-section">
-            <h2 class="comment-title">Discussions</h2>
-            <div class="comment-placeholder">
-                COMMENTS MODULE SYSTEM READY FOR DEPLOYMENT
-            </div>
-        </section>
     </div>
-
-    <footer style="text-align:center; padding: 80px; opacity: 0.5; font-family: 'Cinzel'; font-size: 11px; color: white;">
-        EST. 2026 / RUI & RUIBEET FICTION ARCHIVE
-    </footer>
-
 </body>
 </html>
