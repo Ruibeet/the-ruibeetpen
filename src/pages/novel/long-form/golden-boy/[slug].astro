@@ -4,18 +4,14 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const novelEntries = await getCollection('novel');
   
-  // 🔍 过滤出文件夹名为 golden-boy 的所有 md 文件
-  const filtered = novelEntries.filter(entry => entry.id.startsWith('golden-boy/'));
+  // ✨ 关键修改：过滤掉所有在 golden-boy 文件夹下的 md 文件
+  // 这样这个旧路由就只处理根目录下的短篇小说（如 suzhouhe, earthquake 等）
+  const filteredEntries = novelEntries.filter(entry => !entry.id.startsWith('golden-boy/'));
 
-  return filtered.map(entry => {
-    // 提取文件名作为 slug (例如 "chapter-1")
-    const slugPart = entry.slug.split('/').pop(); 
-    
-    return {
-      params: { slug: slugPart }, 
-      props: { entry },
-    };
-  });
+  return filteredEntries.map(entry => ({
+    params: { slug: entry.slug }, 
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
